@@ -1,34 +1,46 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { PublicScreen, Input, Button } from '../../components';
 import { DefaultColors } from '../../styles';
 
-const Login = () => (
-  <PublicScreen>
-    <View style={styles.container}>
-      <KeyboardAvoidingView
-        behavior="position"
-        contentContainerStyle={styles.centralContainer}
-      >
-        <View style={styles.loginPanel}>
-          <Input
-            placeholder="E-mail"
-            containerStyle={{ marginBottom: 15, marginTop: 15 }}
-          />
-          <Input
-            placeholder="Senha"
-            secureTextEntry
-            containerStyle={{ marginBottom: 20 }}
-          />
-          <View style={styles.buttonContainer}>
-            <Button value="ENTRAR" />
+const Login = () => {
+  const navigation = useNavigation();
+
+  const handleLogin = useCallback(() => {
+    navigation.navigate('Home');
+  });
+
+  return (
+    <PublicScreen>
+      <View style={styles.container}>
+        <KeyboardAvoidingView
+          behavior="position"
+          contentContainerStyle={styles.centralContainer}
+        >
+          <View style={styles.loginPanel}>
+            <Input
+              placeholder="E-mail"
+              containerStyle={{ marginBottom: 15, marginTop: 15 }}
+            />
+            <Input
+              placeholder="Senha"
+              secureTextEntry
+              containerStyle={{ marginBottom: 20 }}
+            />
+            <View style={styles.buttonContainer}>
+              <Button
+                onPress={handleLogin}
+                value="ENTRAR"
+              />
+            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
-  </PublicScreen>
-);
+        </KeyboardAvoidingView>
+      </View>
+    </PublicScreen>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -50,6 +62,7 @@ const styles = StyleSheet.create({
     shadowColor: `rgb(${DefaultColors.secondary})`,
     shadowOffset: { height: 10 },
     shadowOpacity: 0.5,
+    elevation: 10,
   },
   buttonContainer: {
     alignItems: 'center',

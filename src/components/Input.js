@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     shadowColor: `rgb(${DefaultColors.secondary})`,
     shadowOffset: { height: 3, width: 3 },
     shadowOpacity: 0.5,
+    elevation: 3,
   },
 });
 

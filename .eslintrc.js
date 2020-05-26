@@ -24,6 +24,9 @@ module.exports = {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "no-use-before-define": ["error", { "functions": false, "classes": false, "variables": false }],
     "prefer-default-export": "off",
-    "import/no-cycle": "off"
+    "import/no-cycle": "off",
+    "eslint-disable react/default-props-match-prop-types": "off",
+    "function-paren-newline": ["error", "never"],
+    "import/prefer-default-export": "off",
   },
 };

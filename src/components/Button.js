@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 import Typography from './Typography';
 
-const Button = ({ value }) => (
-  <TouchableOpacity>
+const Button = ({ value, onPress }) => (
+  <TouchableOpacity onPress={onPress}>
     <Typography
       fontWeight="bold"
     >
@@ -16,6 +16,7 @@ const Button = ({ value }) => (
 
 Button.propTypes = {
   value: PropTypes.string.isRequired,
+  onPress: PropTypes.func.isRequired,
 };
 
 export default Button;

@@ -4,12 +4,15 @@ import PropTypes from 'prop-types';
 
 import { DefaultColors } from '../styles';
 
-const Typography = ({ children, fontWeight, fontSize }) => (
+const Typography = ({
+  children, fontWeight, fontSize, color,
+}) => (
   <Text
     style={[
       styles.text,
       fontWeight && { fontWeight },
       fontSize && { fontSize },
+      color && { color },
     ]}
   >
     {children}
@@ -23,14 +26,16 @@ const styles = StyleSheet.create({
 });
 
 Typography.defaultProps = {
-  fontWeight: 'regular',
+  fontWeight: 'normal',
   fontSize: 20,
+  color: `rgb(${DefaultColors.secondary})`,
 };
 
 Typography.propTypes = {
   children: PropTypes.string.isRequired,
   fontWeight: PropTypes.string,
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  color: PropTypes.string,
 };
 
 export default Typography;
