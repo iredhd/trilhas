@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 });
 
 Badge.propTypes = {
-  value: PropTypes.oneOf([String, Number]).isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
 export default Badge;

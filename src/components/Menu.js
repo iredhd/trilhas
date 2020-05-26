@@ -85,13 +85,12 @@ const Menu = () => {
               </Typography>
             </View>
           </View>
-          <View style={styles.optionsContainer}>
-            <FlatList
-              data={menuOptions}
-              keyExtractor={({ name }) => name}
-              renderItem={MenuOption}
-            />
-          </View>
+          <FlatList
+            data={menuOptions}
+            keyExtractor={({ name }) => name}
+            renderItem={MenuOption}
+            contentContainerStyle={styles.optionsContainer}
+          />
         </View>
       </Modal>
     </View>
@@ -122,6 +121,13 @@ const styles = StyleSheet.create({
     backgroundColor: `rgb(${DefaultColors.secondary})`,
     borderBottomLeftRadius: 7,
     borderBottomRightRadius: 7,
+    marginBottom: -7,
+    zIndex: 1,
+    shadowColor: `rgb(${DefaultColors.secondary})`,
+    shadowOffset: { height: 5, width: 5 },
+    shadowRadius: 5,
+    elevation: 5,
+    shadowOpacity: 0.5,
   },
   menuContainer: {
     paddingTop: '20%',
@@ -146,13 +152,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   optionsContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 5,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
   },
   optionContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 10,
+    paddingBottom: 20,
   },
   optionButtonContainer: {
     flex: 1,
