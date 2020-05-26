@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { DefaultColors } from '../styles';
 
 const Typography = ({
-  children, fontWeight, fontSize, color,
+  children, fontWeight, fontSize, color, textAlign,
 }) => (
   <Text
     style={[
@@ -13,6 +13,7 @@ const Typography = ({
       fontWeight && { fontWeight },
       fontSize && { fontSize },
       color && { color },
+      textAlign && { textAlign },
     ]}
   >
     {children}
@@ -29,6 +30,7 @@ Typography.defaultProps = {
   fontWeight: 'normal',
   fontSize: 20,
   color: `rgb(${DefaultColors.secondary})`,
+  textAlign: 'left',
 };
 
 Typography.propTypes = {
@@ -36,6 +38,7 @@ Typography.propTypes = {
   fontWeight: PropTypes.string,
   fontSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   color: PropTypes.string,
+  textAlign: PropTypes.string,
 };
 
 export default Typography;
