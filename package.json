@@ -6,7 +6,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "release": "npx release-it",
+    "release": "npx release-it --no-npm.publish",
     "commit": "npx git-cz",
     "deploy": "npx run-s -l deploy:*",
     "deploy:login": "node ./scripts/expoLogin.js",
