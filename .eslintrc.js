@@ -26,7 +26,7 @@ module.exports = {
     "prefer-default-export": "off",
     "import/no-cycle": "off",
     "eslint-disable react/default-props-match-prop-types": "off",
-    "function-paren-newline": ["error", "never"],
+    // "function-paren-newline": ["error", "never"],
     "import/prefer-default-export": "off",
   },
 };

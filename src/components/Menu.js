@@ -3,6 +3,7 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import Modal from 'react-native-modal';
 import PropTypes from 'prop-types';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { DefaultColors } from '../styles';
 import CircularImage from './CircularImage';
@@ -14,37 +15,49 @@ import Badge from './Badge';
 import profileImage from '../../assets/profile.jpg';
 
 const Menu = () => {
+  const navigation = useNavigation();
+  const actualRoute = useRoute().name;
+
   const [isVisible, setIsVisible] = useState(false);
   const [menuOptions, setMenuOptions] = useState([{
+    name: 'home',
+    label: 'Home',
+    badge: null,
+    disabled: actualRoute === 'Home',
+    action: () => {
+      setIsVisible(false);
+      navigation.navigate('Home');
+    },
+  }, {
     name: 'profile',
     label: 'Minhas informações',
     badge: null,
-    action: () => {},
+    action: () => { },
   }, {
     name: 'chat',
     label: 'Conversas',
     badge: 5,
-    action: () => {},
+    action: () => { },
   }, {
     name: 'checklists',
     label: 'Checklists',
     badge: null,
-    action: () => {},
+    action: () => { },
   }, {
     name: 'notifications',
     label: 'Notificações',
     badge: null,
-    action: () => {},
+    action: () => { },
   }, {
     name: 'settings',
     label: 'Configurações',
     badge: null,
-    action: () => {},
+    action: () => { },
   }, {
     name: 'logout',
     label: 'Sair',
     badge: null,
-    action: () => {},
+    action: () => { },
   }]);
 
   const handleMenuToggle = useCallback(() => {
@@ -69,7 +82,7 @@ const Menu = () => {
           <View style={styles.profileContainer}>
             <View style={styles.profileImageContainer}>
               <CircularImage
-                radius={150}
+                radius={75}
                 image={profileImage}
               />
             </View>
@@ -103,6 +116,7 @@ const MenuOption = ({ item }) => (
       <Button
         value={item.label}
         onPress={item.action}
+        disabled={item.disabled}
       />
     </View>
     {item.badge && (

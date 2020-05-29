@@ -8,8 +8,8 @@ const CircularImage = ({ image, radius }) => (
   <View style={[styles.container]}>
     <Image
       resizeMode="cover"
-      source={image}
-      style={[styles.imageContainer, { width: radius, height: radius, borderRadius: radius / 2 }]}
+      source={typeof image === 'string' ? { uri: image } : image}
+      style={[styles.imageContainer, { width: radius * 2, height: radius * 2, borderRadius: radius }]}
     />
   </View>
 );
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 
 CircularImage.propTypes = {
   radius: PropTypes.number.isRequired,
-  image: Image.propTypes.source.isRequired,
+  image: PropTypes.oneOfType([Image.propTypes.source, PropTypes.string]).isRequired,
 };
 
 export default CircularImage;

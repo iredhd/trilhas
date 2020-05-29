@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { Loading, Login, Home } from '../screens';
+import { Loading, Login, Home, GuideSearch, } from '../screens';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +22,10 @@ const Router = () => (
       <Stack.Screen
         name="Home"
         component={Home}
+      />
+      <Stack.Screen
+        name="GuideSearch"
+        component={GuideSearch}
       />
     </Stack.Navigator>
   </NavigationContainer>

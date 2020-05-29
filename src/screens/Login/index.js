@@ -15,9 +15,8 @@ const Login = () => {
   return (
     <PublicScreen>
       <View style={styles.container}>
-        <KeyboardAvoidingView
-          behavior="position"
-          contentContainerStyle={styles.centralContainer}
+        <View
+          style={styles.centralContainer}
         >
           <View style={styles.loginPanel}>
             <Input
@@ -36,7 +35,7 @@ const Login = () => {
               />
             </View>
           </View>
-        </KeyboardAvoidingView>
+        </View>
       </View>
     </PublicScreen>
   );

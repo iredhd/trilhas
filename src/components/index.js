@@ -10,6 +10,9 @@ import Icon from './Icon';
 import IconButton from './IconButton';
 import CircularImage from './CircularImage';
 import Badge from './Badge';
+import LoadingWrapper from './LoadingWrapper';
+import Loading from './Loading';
+import List from './List';
 
 export {
   Background,
@@ -24,4 +27,7 @@ export {
   IconButton,
   CircularImage,
   Badge,
+  LoadingWrapper,
+  Loading,
+  List,
 };

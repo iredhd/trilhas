@@ -3,27 +3,30 @@ import {
   View, StyleSheet, ImageBackground, FlatList, TouchableOpacity, Dimensions,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { useNavigation } from '@react-navigation/native';
 
 import { PrivateRoute, Typography } from '../../components';
-import { DefaultColors } from '../../styles';
+import { DefaultColors, CardStyles } from '../../styles';
 import homeBackground from '../../../assets/home-background.jpg';
 
 const Home = () => {
+  const navigation = useNavigation();
+
   const [homeOptions, setHomeOptions] = useState([{
     name: 'find_a_guide',
     label: 'Encontrar um guia',
     disabled: false,
-    action: () => {},
+    action: () => navigation.navigate('GuideSearch'),
   }, {
     name: 'find_a_group',
     label: 'Encontrar um grupo\n(em breve)',
     disabled: true,
-    action: () => {},
+    action: () => { },
   }, {
     name: 'find_a_trail',
     label: 'Encontrar uma trilha\n(em breve)',
     disabled: true,
-    action: () => {},
+    action: () => { },
   }]);
 
   return (
@@ -53,6 +56,7 @@ const MenuOption = ({ item }) => (
     <TouchableOpacity
       style={styles.optionContainer}
       disabled={item.disabled}
+      onPress={item.action}
     >
       <Typography
         fontWeight="bold"
@@ -85,13 +89,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   optionContainer: {
-    height: 80,
-    borderRadius: 5,
-    marginVertical: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: Dimensions.get('window').width * 0.8,
-    backgroundColor: `rgba(${DefaultColors.secondary}, 0.4)`,
+    ...CardStyles
   },
 });
 
