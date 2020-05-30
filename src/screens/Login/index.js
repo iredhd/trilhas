@@ -9,7 +9,7 @@ const Login = () => {
   const navigation = useNavigation();
 
   const handleLogin = useCallback(() => {
-    navigation.navigate('Home');
+    navigation.navigate('App');
   });
 
   return (

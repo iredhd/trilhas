@@ -15,6 +15,7 @@ const List = ({
     data={data}
     keyExtractor={keyExtractor}
     renderItem={({ item }) => <Card item={item} />}
+    showsVerticalScrollIndicator={false}
     ListHeaderComponent={data.length && (
     <Typography
       fontSize={16}

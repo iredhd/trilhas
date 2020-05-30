@@ -1,13 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import Modal from 'react-native-modal';
 import PropTypes from 'prop-types';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useIsDrawerOpen } from '@react-navigation/drawer';
 
 import { DefaultColors } from '../styles';
 import CircularImage from './CircularImage';
-import IconButton from './IconButton';
 import Typography from './Typography';
 import Button from './Button';
 import Badge from './Badge';
@@ -16,16 +15,14 @@ import profileImage from '../../assets/profile.jpg';
 
 const Menu = () => {
   const navigation = useNavigation();
-  const actualRoute = useRoute().name;
+  const route = useRoute();
+  const drawerIsOpen = useIsDrawerOpen();
 
-  const [isVisible, setIsVisible] = useState(false);
   const [menuOptions, setMenuOptions] = useState([{
-    name: 'home',
+    name: 'Home',
     label: 'Home',
     badge: null,
-    disabled: actualRoute === 'Home',
     action: () => {
-      setIsVisible(false);
       navigation.navigate('Home');
     },
   }, {
@@ -60,52 +57,45 @@ const Menu = () => {
     action: () => { },
   }]);
 
-  const handleMenuToggle = useCallback(() => {
-    setIsVisible(!isVisible);
-  });
+  useEffect(() => {
+    if (drawerIsOpen) {
+      setMenuOptions(menuOptions.map((option) => ({
+        ...option,
+        disabled: option.name === route.state.routeNames[route.state.index],
+      })));
+      // const actualRoute = route.routes[route.index];
+      // console.log(actualRoute);
+    }
+  }, [drawerIsOpen]);
 
   return (
-    <View style={styles.container}>
-      <IconButton
-        icon="menu"
-        onPress={handleMenuToggle}
-        iconSize={50}
-      />
-      <Modal
-        useNativeDriver
-        isVisible={isVisible}
-        onBackdropPress={handleMenuToggle}
-        animationIn="slideInLeft"
-        animationOut="slideOutLeft"
-      >
-        <View style={styles.menuContainer}>
-          <View style={styles.profileContainer}>
-            <View style={styles.profileImageContainer}>
-              <CircularImage
-                radius={75}
-                image={profileImage}
-              />
-            </View>
-            <View style={styles.profileInformationContainer}>
-              <Typography
-                fontWeight="bold"
-                fontSize={22}
-              >
-                Ighor Redhd
-              </Typography>
-              <Typography>
-                Santos, SP - Brazil
-              </Typography>
-            </View>
-          </View>
-          <FlatList
-            data={menuOptions}
-            keyExtractor={({ name }) => name}
-            renderItem={MenuOption}
-            contentContainerStyle={styles.optionsContainer}
+    <View style={styles.menuContainer}>
+      <View style={styles.profileContainer}>
+        <View style={styles.profileImageContainer}>
+          <CircularImage
+            radius={75}
+            image={profileImage}
           />
         </View>
-      </Modal>
+        <View style={styles.profileInformationContainer}>
+          <Typography
+            fontWeight="bold"
+            fontSize={22}
+          >
+            Ighor Redhd
+          </Typography>
+          <Typography>
+            Santos, SP - Brazil
+          </Typography>
+        </View>
+      </View>
+      <FlatList
+        data={menuOptions}
+        keyExtractor={({ name }) => name}
+        renderItem={MenuOption}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.optionsContainer}
+      />
     </View>
   );
 };
@@ -147,9 +137,9 @@ const styles = StyleSheet.create({
     paddingTop: '20%',
     backgroundColor: `rgb(${DefaultColors.primary})`,
     height: '110%',
-    left: -20,
-    position: 'absolute',
-    width: '90%',
+    // left: -20,
+    // position: 'absolute',
+    width: '100%',
   },
   profileContainer: {
     alignItems: 'center',
