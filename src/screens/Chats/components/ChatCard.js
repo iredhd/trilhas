@@ -3,7 +3,7 @@ import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useNavigation } from '@react-navigation/native';
 
-import { Typography, CircularImage } from '../../../components';
+import { Typography, CircularImage, Badge } from '../../../components';
 import { CardStyles } from '../../../styles';
 
 const ChatCard = ({ item }) => {
@@ -45,6 +45,11 @@ const ChatCard = ({ item }) => {
             {item.message}
           </Typography>
         </View>
+        <View style={styles.badgeContainer}>
+          <Badge
+            value={7}
+          />
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -67,6 +72,9 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     justifyContent: 'space-between',
+  },
+  badgeContainer: {
+    height: '100%',
   },
 });
 
