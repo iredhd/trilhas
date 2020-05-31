@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  View, Text, ImageBackground, Image, StyleSheet,
+  View, StyleSheet,
 } from 'react-native';
 
 const Loading = () => (

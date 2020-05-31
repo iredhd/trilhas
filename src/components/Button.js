@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 
 import Typography from './Typography';
 
-const Button = ({ value, onPress, disabled }) => (
+const Button = ({
+  value, onPress, disabled, color,
+}) => (
   <View
     style={{ opacity: disabled ? 0.4 : 1 }}
   >
@@ -14,6 +16,7 @@ const Button = ({ value, onPress, disabled }) => (
     >
       <Typography
         fontWeight="bold"
+        color={color}
       >
         {value}
       </Typography>

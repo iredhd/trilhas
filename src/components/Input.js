@@ -5,14 +5,25 @@ import PropTypes from 'prop-types';
 import { DefaultColors } from '../styles';
 
 const Input = ({
-  placeholder, onChangeText, secureTextEntry, containerStyle,
+  placeholder, onChangeText, secureTextEntry, containerStyle, value,
+  multiline, numberOfLines,
 }) => (
-  <View style={[styles.container, containerStyle]}>
+  <View style={[
+    styles.container,
+    multiline && {
+      height: 40 * numberOfLines,
+      justifyContent: 'flex-start',
+    },
+    containerStyle,
+  ]}
+  >
     <TextInput
+      multiline={multiline}
       placeholder={placeholder}
       placeholderTextColor={`rgb(${DefaultColors.secondary})`}
       secureTextEntry={secureTextEntry}
       onChangeText={onChangeText}
+      value={value}
     />
   </View>
 );
@@ -39,13 +50,19 @@ Input.defaultProps = {
   onChangeText: () => {},
   secureTextEntry: false,
   containerStyle: {},
+  value: '',
+  multiline: false,
+  numberOfLines: 1,
 };
 
 Input.propTypes = {
+  value: PropTypes.string,
   placeholder: PropTypes.string,
   onChangeText: PropTypes.func,
   secureTextEntry: PropTypes.bool,
   containerStyle: PropTypes.instanceOf(Object),
+  multiline: PropTypes.bool,
+  numberOfLines: PropTypes.number,
 };
 
 export default Input;

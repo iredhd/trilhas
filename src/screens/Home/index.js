@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  View, StyleSheet, ImageBackground, FlatList, TouchableOpacity, Dimensions,
+  View, StyleSheet, ImageBackground, FlatList, TouchableOpacity,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { useNavigation } from '@react-navigation/native';
@@ -12,7 +12,7 @@ import homeBackground from '../../../assets/home-background.jpg';
 const Home = () => {
   const navigation = useNavigation();
 
-  const [homeOptions, setHomeOptions] = useState([{
+  const [homeOptions] = useState([{
     name: 'find_a_guide',
     label: 'Encontrar um guia',
     disabled: false,
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   optionContainer: {
-    ...CardStyles
+    ...CardStyles,
   },
 });
 

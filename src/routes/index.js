@@ -4,7 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 
 import {
-  Loading, Login, Home, GuideSearch,
+  Loading, Login, Home, GuideSearch, Profile,
 } from '../screens';
 import { Menu } from '../components';
 
@@ -39,6 +39,10 @@ const App = () => (
     <Drawer.Screen
       name="GuideSearch"
       component={GuideSearch}
+    />
+    <Drawer.Screen
+      name="Profile"
+      component={Profile}
     />
   </Drawer.Navigator>
 );

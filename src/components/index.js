@@ -13,6 +13,9 @@ import Badge from './Badge';
 import LoadingWrapper from './LoadingWrapper';
 import Loading from './Loading';
 import List from './List';
+import RefreshableScrollView from './RefreshableScrollView';
+import Spacer from './Spacer';
+import Switch from './Switch';
 
 export {
   Background,
@@ -30,4 +33,7 @@ export {
   LoadingWrapper,
   Loading,
   List,
+  RefreshableScrollView,
+  Spacer,
+  Switch,
 };
