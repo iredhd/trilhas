@@ -26,31 +26,38 @@ const Menu = () => {
       navigation.navigate('Home');
     },
   }, {
-    name: 'profile',
+    name: 'Profile',
     label: 'Minhas informações',
     badge: null,
-    action: () => { },
+    action: () => {
+      navigation.navigate('Profile');
+    },
   }, {
-    name: 'chat',
+    name: 'Chats',
     label: 'Conversas',
     badge: 5,
-    action: () => { },
-  }, {
-    name: 'checklists',
-    label: 'Checklists',
-    badge: null,
-    action: () => { },
-  }, {
-    name: 'notifications',
-    label: 'Notificações',
-    badge: null,
-    action: () => { },
-  }, {
-    name: 'settings',
-    label: 'Configurações',
-    badge: null,
-    action: () => { },
-  }, {
+    action: () => {
+      navigation.navigate('Chats');
+    },
+  },
+  // {
+  //   name: 'checklists',
+  //   label: 'Checklists',
+  //   badge: null,
+  //   action: () => { },
+  // }, {
+  //   name: 'notifications',
+  //   label: 'Notificações',
+  //   badge: null,
+  //   action: () => { },
+  // },
+  // {
+  //   name: 'settings',
+  //   label: 'Configurações',
+  //   badge: null,
+  //   action: () => { },
+  // },
+  {
     name: 'logout',
     label: 'Sair',
     badge: null,
@@ -63,8 +70,6 @@ const Menu = () => {
         ...option,
         disabled: option.name === route.state.routeNames[route.state.index],
       })));
-      // const actualRoute = route.routes[route.index];
-      // console.log(actualRoute);
     }
   }, [drawerIsOpen]);
 
@@ -94,6 +99,7 @@ const Menu = () => {
         keyExtractor={({ name }) => name}
         renderItem={MenuOption}
         showsVerticalScrollIndicator={false}
+        bounces={false}
         contentContainerStyle={styles.optionsContainer}
       />
     </View>
@@ -137,8 +143,6 @@ const styles = StyleSheet.create({
     paddingTop: '20%',
     backgroundColor: `rgb(${DefaultColors.primary})`,
     height: '110%',
-    // left: -20,
-    // position: 'absolute',
     width: '100%',
   },
   profileContainer: {

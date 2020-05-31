@@ -4,7 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 
 import {
-  Loading, Login, Home, GuideSearch, Profile,
+  Loading, Login, Home, GuideSearch, Profile, Chat, Chats,
 } from '../screens';
 import { Menu } from '../components';
 
@@ -43,6 +43,14 @@ const App = () => (
     <Drawer.Screen
       name="Profile"
       component={Profile}
+    />
+    <Drawer.Screen
+      name="Chat"
+      component={Chat}
+    />
+    <Drawer.Screen
+      name="Chats"
+      component={Chats}
     />
   </Drawer.Navigator>
 );

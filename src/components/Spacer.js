@@ -7,14 +7,14 @@ const Spacer = ({
 }) => (
   <View style={[
     horizontal && { marginHorizontal: size },
-    vertical && { marginVertical: size },
+    (vertical || (!vertical && !horizontal)) && { marginVertical: size },
   ]}
   />
 );
 
 Spacer.defaultProps = {
   horizontal: false,
-  vertical: true,
+  vertical: false,
 };
 
 Spacer.propTypes = {
