@@ -16,3 +16,7 @@ web-report/
 package-lock.json
 
 .env
+
+firebaseConfig.js
+
+app.json
