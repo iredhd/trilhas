@@ -1,18 +1,22 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import firebase from 'firebase';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 import Router from './src/routes';
+import { store, persistor } from './src/store';
+import firebaseConfig from './firebaseConfig';
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Router />
-    </View>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <Router />
+      </PersistGate>
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

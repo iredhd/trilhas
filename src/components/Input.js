@@ -6,7 +6,7 @@ import { DefaultColors } from '../styles';
 
 const Input = ({
   placeholder, onChangeText, secureTextEntry, containerStyle, value,
-  multiline, numberOfLines,
+  multiline, numberOfLines, keyboardType, autoCapitalize,
 }) => (
   <View style={[
     styles.container,
@@ -24,6 +24,8 @@ const Input = ({
       secureTextEntry={secureTextEntry}
       onChangeText={onChangeText}
       value={value}
+      keyboardType={keyboardType}
+      autoCapitalize={autoCapitalize}
     />
   </View>
 );
@@ -53,6 +55,8 @@ Input.defaultProps = {
   value: '',
   multiline: false,
   numberOfLines: 1,
+  keyboardType: 'default',
+  autoCapitalize: 'sentences',
 };
 
 Input.propTypes = {
@@ -63,6 +67,8 @@ Input.propTypes = {
   containerStyle: PropTypes.instanceOf(Object),
   multiline: PropTypes.bool,
   numberOfLines: PropTypes.number,
+  keyboardType: PropTypes.string,
+  autoCapitalize: PropTypes.string,
 };
 
 export default Input;

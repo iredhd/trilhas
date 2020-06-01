@@ -3,13 +3,24 @@ import PropTypes from 'prop-types';
 import { View, StyleSheet } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { useNavigation } from '@react-navigation/native';
+import firebase from 'firebase';
+import { useDispatch } from 'react-redux';
 
 import Watermark from './Watermark';
 import IconButton from './IconButton';
 import { DefaultColors } from '../styles';
+import { logout } from '../store/actions/Auth';
 
 const PrivateRoute = ({ children }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  firebase.auth().onAuthStateChanged((user) => {
+    if (!user) {
+      dispatch(logout());
+      navigation.replace('Auth');
+    }
+  });
 
   const handleMenuToggle = useCallback(() => {
     navigation.toggleDrawer();

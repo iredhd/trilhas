@@ -13,10 +13,7 @@ web-report/
 # macOS
 .DS_Store
 
-package-lock.json
-
 .env
-
-firebaseConfig.js
-
+package-lock.json
 app.json
+firebaseConfig.js

@@ -13,16 +13,17 @@ const Drawer = createDrawerNavigator();
 
 const Auth = () => (
   <Stack.Navigator
-    initialRouteName="Login"
+    initialRouteName="Loading"
     headerMode="none"
+    gestureEnabled={false}
   >
-    <Stack.Screen
-      name="Login"
-      component={Login}
-    />
     <Stack.Screen
       name="Loading"
       component={Loading}
+    />
+    <Stack.Screen
+      name="Login"
+      component={Login}
     />
   </Stack.Navigator>
 );
@@ -60,6 +61,7 @@ const Router = () => (
     <Stack.Navigator
       headerMode="none"
       initialRouteName="Auth"
+      gestureEnabled={false}
     >
       <Stack.Screen
         name="Auth"

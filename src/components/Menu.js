@@ -4,17 +4,20 @@ import { getStatusBarHeight } from 'react-native-status-bar-height';
 import PropTypes from 'prop-types';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useIsDrawerOpen } from '@react-navigation/drawer';
+import { useDispatch } from 'react-redux';
 
 import { DefaultColors } from '../styles';
 import CircularImage from './CircularImage';
 import Typography from './Typography';
 import Button from './Button';
 import Badge from './Badge';
-
 import profileImage from '../../assets/profile.jpg';
+import { Auth } from '../services';
+import { logout } from '../store/actions/Auth';
 
 const Menu = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const route = useRoute();
   const drawerIsOpen = useIsDrawerOpen();
 
@@ -61,7 +64,9 @@ const Menu = () => {
     name: 'logout',
     label: 'Sair',
     badge: null,
-    action: () => { },
+    action: () => {
+      dispatch(logout());
+    },
   }]);
 
   useEffect(() => {

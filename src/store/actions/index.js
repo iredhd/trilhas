@@ -1,0 +1,16 @@
+const Auth = {
+  AUTH_LOGGED_IN: 'AUTH_LOGGED_IN',
+  AUTH_LOGGED_OUT: 'AUTH_LOGGED_OUT',
+  AUTH_REQUESTING_LOGIN: 'AUTH_REQUESTING_LOGIN',
+  AUTH_FAIL_LOGIN: 'AUTH_FAIL_LOGIN',
+};
+
+const User = {
+  USER_REGISTER_DATA: 'USER_REGISTER_DATA',
+  USER_CLEAR_DATA: 'USER_CLEAR_DATA',
+};
+
+export const ActionTypes = {
+  ...Auth,
+  ...User,
+};

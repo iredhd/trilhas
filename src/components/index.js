@@ -1,6 +1,6 @@
 import Background from './Background';
 import Watermark from './Watermark';
-import PublicScreen from './PublicRoute';
+import PublicRoute from './PublicRoute';
 import Input from './Input';
 import Button from './Button';
 import Typography from './Typography';
@@ -16,11 +16,12 @@ import List from './List';
 import RefreshableScrollView from './RefreshableScrollView';
 import Spacer from './Spacer';
 import Switch from './Switch';
+import PopUp from './PopUp';
 
 export {
   Background,
   Watermark,
-  PublicScreen,
+  PublicRoute,
   Input,
   Button,
   Typography,
@@ -36,4 +37,5 @@ export {
   RefreshableScrollView,
   Spacer,
   Switch,
+  PopUp,
 };
