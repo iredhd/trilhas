@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 import {
   Typography, Button, CircularImage, Spacer,
@@ -10,6 +11,7 @@ import { DefaultColors } from '../../../styles';
 
 const ProfileView = ({ profile, toggleProfileScreen }) => {
   const navigation = useNavigation();
+  const userId = useSelector((state) => state.User.id);
 
   return (
     <View>
@@ -42,21 +44,25 @@ const ProfileView = ({ profile, toggleProfileScreen }) => {
         </Typography>
       </View>
       <View style={styles.buttonsContainer}>
-        <Button
-          value="ENVIAR MENSAGEM"
-          onPress={() => navigation.navigate('Chat')}
-        />
-        <Spacer size={15} />
-        <Button
-          value="ATUALIZAR DADOS"
-          onPress={toggleProfileScreen}
-        />
-        <Spacer size={15} />
-        <Button
-          color={`rgb(${DefaultColors.danger})`}
-          value="DENUNCIAR"
-          onPress={() => {}}
-        />
+        {userId === profile.id ? (
+          <Button
+            value="ATUALIZAR DADOS"
+            onPress={toggleProfileScreen}
+          />
+        ) : (
+          <View>
+            <Button
+              value="ENVIAR MENSAGEM"
+              onPress={() => navigation.navigate('Chat')}
+            />
+            <Spacer size={15} />
+            <Button
+              color={`rgb(${DefaultColors.danger})`}
+              value="DENUNCIAR"
+              onPress={() => {}}
+            />
+          </View>
+        )}
       </View>
     </View>
   );
@@ -89,6 +95,7 @@ const styles = StyleSheet.create({
 
 ProfileView.propTypes = {
   profile: PropTypes.shape({
+    id: PropTypes.string,
     name: PropTypes.string,
     bio: PropTypes.string,
     cityName: PropTypes.string,

@@ -2,38 +2,89 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, StyleSheet, Image } from 'react-native';
 import ImageView from 'react-native-image-viewing';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
 
 import { DefaultColors } from '../styles';
+import PopUp from './PopUp';
+import NoImage from '../../assets/icon.png';
 
-const CircularImage = ({ image, radius, allowImageViewing }) => {
+const CircularImage = ({
+  image, radius, allowImageViewing, allowImageUpload, onImageUpload,
+}) => {
   const [isImageVisible, setIsImageVisible] = useState(false);
+  const [isPopVisible, setIsPopVisible] = useState(false);
+  const [imageToView, setImageToView] = useState(image);
 
-  const handleToggleImage = useCallback(() => {
-    setIsImageVisible(!isImageVisible);
+  const togglePop = useCallback(() => setIsPopVisible(!isPopVisible));
+
+  const handleToggleImage = useCallback(async () => {
+    if (!allowImageUpload) {
+      return setIsImageVisible(!isImageVisible);
+    }
+
+    let { status: actualStatus } = await Permissions.getAsync(Permissions.CAMERA_ROLL);
+
+    if (actualStatus !== 'granted') {
+      const { status } = await ImagePicker.requestCameraRollPermissionsAsync(Permissions.CAMERA_ROLL);
+      actualStatus = status;
+    }
+
+    if (actualStatus !== 'granted') {
+      return togglePop();
+    }
+
+    const { uri, cancelled } = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (cancelled) {
+      return null;
+    }
+
+    setImageToView(uri);
+    return onImageUpload(uri);
   });
 
   return (
     <TouchableOpacity
       onPress={handleToggleImage}
       style={styles.container}
-      disabled={!allowImageViewing}
+      disabled={!allowImageViewing && !allowImageUpload}
     >
       <Image
         resizeMode="cover"
-        source={typeof image === 'string' ? { uri: image } : image}
-        style={[styles.imageContainer, { width: radius * 2, height: radius * 2, borderRadius: radius }]}
+        source={typeof imageToView === 'string' ? { uri: imageToView } : imageToView || NoImage}
+        style={[
+          styles.imageContainer,
+          { width: radius * 2, height: radius * 2, borderRadius: radius },
+        ]}
       />
 
       {allowImageViewing && (
       <ImageView
         images={[{
-          uri: image,
+          uri: imageToView,
         }]}
         imageIndex={0}
         visible={isImageVisible}
         onRequestClose={handleToggleImage}
       />
       )}
+      <PopUp
+        isVisible={isPopVisible}
+        title="Ooops!"
+        body="Para fazer a atualização da imagem, é necesssário o acesso à galeria."
+        options={[
+          {
+            label: 'OK',
+            onPress: togglePop,
+          },
+        ]}
+      />
     </TouchableOpacity>
   );
 };
@@ -53,12 +104,20 @@ const styles = StyleSheet.create({
 
 CircularImage.defaultProps = {
   allowImageViewing: false,
+  image: NoImage,
+  allowImageUpload: false,
+  onImageUpload: () => {},
 };
 
 CircularImage.propTypes = {
   radius: PropTypes.number.isRequired,
   allowImageViewing: PropTypes.bool,
-  image: PropTypes.oneOfType([Image.propTypes.source, PropTypes.string]).isRequired,
+  image: PropTypes.oneOfType([
+    Image.propTypes.source,
+    PropTypes.string,
+  ]),
+  allowImageUpload: PropTypes.bool,
+  onImageUpload: PropTypes.func,
 };
 
 export default CircularImage;

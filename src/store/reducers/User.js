@@ -4,6 +4,8 @@ const initialState = {
   id: null,
   name: null,
   email: null,
+  cityName: null,
+  profilePicture: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -14,6 +16,8 @@ const reducer = (state = initialState, action) => {
         id: action.payload.id,
         name: action.payload.name,
         email: action.payload.email,
+        cityName: action.payload.cityName,
+        profilePicture: action.payload.profilePicture,
       };
     case ActionTypes.USER_CLEAR_DATA:
       return {

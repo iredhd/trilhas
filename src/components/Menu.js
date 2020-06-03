@@ -4,15 +4,13 @@ import { getStatusBarHeight } from 'react-native-status-bar-height';
 import PropTypes from 'prop-types';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useIsDrawerOpen } from '@react-navigation/drawer';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { DefaultColors } from '../styles';
 import CircularImage from './CircularImage';
 import Typography from './Typography';
 import Button from './Button';
 import Badge from './Badge';
-import profileImage from '../../assets/profile.jpg';
-import { Auth } from '../services';
 import { logout } from '../store/actions/Auth';
 
 const Menu = () => {
@@ -20,6 +18,7 @@ const Menu = () => {
   const dispatch = useDispatch();
   const route = useRoute();
   const drawerIsOpen = useIsDrawerOpen();
+  const user = useSelector(({ User }) => User);
 
   const [menuOptions, setMenuOptions] = useState([{
     name: 'Home',
@@ -43,23 +42,6 @@ const Menu = () => {
       navigation.navigate('Chats');
     },
   },
-  // {
-  //   name: 'checklists',
-  //   label: 'Checklists',
-  //   badge: null,
-  //   action: () => { },
-  // }, {
-  //   name: 'notifications',
-  //   label: 'Notificações',
-  //   badge: null,
-  //   action: () => { },
-  // },
-  // {
-  //   name: 'settings',
-  //   label: 'Configurações',
-  //   badge: null,
-  //   action: () => { },
-  // },
   {
     name: 'logout',
     label: 'Sair',
@@ -84,7 +66,7 @@ const Menu = () => {
         <View style={styles.profileImageContainer}>
           <CircularImage
             radius={75}
-            image={profileImage}
+            image={user.profilePicture}
           />
         </View>
         <View style={styles.profileInformationContainer}>
@@ -92,10 +74,10 @@ const Menu = () => {
             fontWeight="bold"
             fontSize={22}
           >
-            Ighor Redhd
+            {user.name}
           </Typography>
           <Typography>
-            Santos, SP - Brazil
+            {user.cityName}
           </Typography>
         </View>
       </View>

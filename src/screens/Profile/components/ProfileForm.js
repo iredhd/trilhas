@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  View, StyleSheet, KeyboardAvoidingView, Platform,
+} from 'react-native';
 import PropTypes from 'prop-types';
 
 import {
@@ -8,8 +10,19 @@ import {
 } from '../../../components';
 import { DefaultColors } from '../../../styles';
 
-const ProfileForm = ({ profile, toggleProfileScreen }) => {
+const ProfileForm = ({ profile, toggleProfileScreen, handleSubmit }) => {
   const [form, setForm] = useState({ ...profile });
+
+  const onImageUpload = useCallback((profilePicture) => {
+    setForm({
+      ...form,
+      profilePicture,
+    });
+  });
+
+  const onSubmit = useCallback(() => {
+    handleSubmit(form);
+  });
 
   useEffect(() => {
     setForm({
@@ -20,48 +33,54 @@ const ProfileForm = ({ profile, toggleProfileScreen }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <CircularImage
-          image={form.profilePicture}
-          radius={100}
-          allowImageViewing
-        />
-      </View>
-      <View style={styles.informationContainer}>
-        <View style={styles.isAGuideContainer}>
-          <Typography>
-            Sou um guia:
-          </Typography>
-          <Switch
-            onChange={(isGuide) => setForm({ ...form, isGuide })}
-            value={form.isGuide}
+      <KeyboardAvoidingView
+        enabled={Platform.OS === 'ios'}
+        behavior="position"
+      >
+        <View style={styles.imageContainer}>
+          <CircularImage
+            image={form.profilePicture}
+            radius={100}
+            allowImageUpload
+            onImageUpload={onImageUpload}
           />
         </View>
-        <Spacer size={7.5} />
-        <Input
-          placeholder="Nome"
-          value={form.name}
-          onChangeText={(name) => setForm({ ...form, name })}
-        />
-        <Spacer size={7.5} />
-        <Input
-          placeholder="Cidade"
-          value={form.cityName}
-          onChangeText={(cityName) => setForm({ ...form, cityName })}
-        />
-        <Spacer size={7.5} />
-        <Input
-          multiline
-          placeholder="Descrição"
-          value={form.bio}
-          onChangeText={(bio) => setForm({ ...form, bio })}
-          numberOfLines={5}
-        />
-      </View>
+        <View style={styles.informationContainer}>
+          <View style={styles.isAGuideContainer}>
+            <Typography>
+              Sou um guia:
+            </Typography>
+            <Switch
+              onChange={(isGuide) => setForm({ ...form, isGuide })}
+              value={form.isGuide}
+            />
+          </View>
+          <Spacer size={7.5} />
+          <Input
+            placeholder="Nome"
+            value={form.name}
+            onChangeText={(name) => setForm({ ...form, name })}
+          />
+          <Spacer size={7.5} />
+          <Input
+            placeholder="Cidade"
+            value={form.cityName}
+            onChangeText={(cityName) => setForm({ ...form, cityName })}
+          />
+          <Spacer size={7.5} />
+          <Input
+            multiline
+            placeholder="Descrição"
+            value={form.bio}
+            onChangeText={(bio) => setForm({ ...form, bio })}
+            numberOfLines={5}
+          />
+        </View>
+      </KeyboardAvoidingView>
       <View style={styles.buttonsContainer}>
         <Button
           value="ATUALIZAR DADOS"
-          onPress={toggleProfileScreen}
+          onPress={onSubmit}
         />
         <Spacer size={15} />
         <Button
@@ -101,6 +120,7 @@ ProfileForm.propTypes = {
     profilePicture: PropTypes.string,
   }).isRequired,
   toggleProfileScreen: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
 };
 
 export default ProfileForm;

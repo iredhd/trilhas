@@ -1,17 +1,16 @@
 import firebase from 'firebase';
 import 'firebase/auth';
+import User from './User';
 
 class Auth {
   static async LoginWithEmailAndPassword(email, password) {
     try {
-      const { user } = await firebase.auth().signInWithEmailAndPassword(email, password);
+      const { user: AuthData } = await firebase.auth().signInWithEmailAndPassword(email, password);
+
+      const user = await User.getUser(AuthData.uid);
 
       return {
-        user: {
-          name: user.displayName,
-          email: user.email,
-          id: user.uid,
-        },
+        user,
         token: user.refreshToken,
       };
     } catch ({ code }) {
@@ -35,6 +34,8 @@ class Auth {
         return 'E-mail inválido.';
       case 'auth/wrong-password':
         return 'Senha incorreta.';
+      case 'auth/user-not-found':
+        return 'Usuário inexistente.';
       case 'auth/user-disabled':
         return 'Usuário bloqueado.\nEntre em contato com suporte.';
       default:
