@@ -46,7 +46,19 @@ const Profile = () => {
 
   const handleSubmit = useCallback(async (form) => {
     setIsLoading(true);
-    const userUpdated = await User.upsertUser(form);
+    let userUpdated = await User.upsertUser(form);
+
+    if (form.profilePictureBase64) {
+      const { profilePicture, error } = await User.upsertProfilePicture(userUpdated.id, form.profilePictureBase64);
+
+      if (!error) {
+        userUpdated = {
+          ...userUpdated,
+          profilePicture,
+        };
+      }
+    }
+
     initialLoad();
     handleToggleProfileScreen();
     dispatch(registerData(userUpdated));
