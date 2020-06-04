@@ -1,6 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity, StyleSheet, Image } from 'react-native';
+import {
+  TouchableOpacity, StyleSheet, Image, View,
+} from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
@@ -8,6 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { DefaultColors } from '../styles';
 import PopUp from './PopUp';
 import NoImage from '../../assets/icon.png';
+import Loading from './Loading';
 
 const CircularImage = ({
   image, radius, allowImageViewing, allowImageUpload, onImageUpload,
@@ -15,6 +18,7 @@ const CircularImage = ({
   const [isImageVisible, setIsImageVisible] = useState(false);
   const [isPopVisible, setIsPopVisible] = useState(false);
   const [imageToView, setImageToView] = useState(image);
+  const [isLoading, setIsLoading] = useState(false);
 
   const togglePop = useCallback(() => setIsPopVisible(!isPopVisible));
 
@@ -34,8 +38,9 @@ const CircularImage = ({
       return togglePop();
     }
 
-    const { uri, cancelled } = await ImagePicker.launchImageLibraryAsync({
+    const { uri, cancelled, base64 } = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      base64: true,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
@@ -46,8 +51,20 @@ const CircularImage = ({
     }
 
     setImageToView(uri);
-    return onImageUpload(uri);
+    return onImageUpload({ uri, base64 });
   });
+
+  const onLoadStart = useCallback(() => {
+    setIsLoading(true);
+  });
+
+  const onLoadEnd = useCallback(() => {
+    setIsLoading(false);
+  });
+
+  useEffect(() => {
+    setImageToView(image);
+  }, [image]);
 
   return (
     <TouchableOpacity
@@ -57,12 +74,19 @@ const CircularImage = ({
     >
       <Image
         resizeMode="cover"
+        onLoadStart={onLoadStart}
+        onLoadEnd={onLoadEnd}
         source={typeof imageToView === 'string' ? { uri: imageToView } : imageToView || NoImage}
         style={[
           styles.imageContainer,
           { width: radius * 2, height: radius * 2, borderRadius: radius },
         ]}
       />
+      {isLoading && (
+      <View style={styles.loadingContainer}>
+        <Loading size="large" />
+      </View>
+      )}
 
       {allowImageViewing && (
       <ImageView
@@ -95,10 +119,15 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 5 },
     shadowOpacity: 0.5,
     elevation: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   imageContainer: {
     borderRadius: 50,
     resizeMode: 'cover',
+  },
+  loadingContainer: {
+    position: 'absolute',
   },
 });
 

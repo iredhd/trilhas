@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import uuid from 'uuid-random';
 
 class User {
   static async getUser(id) {
@@ -55,10 +56,59 @@ class User {
         });
       }
 
-      return this.mapUserData(userData);
+      return this.mapUserData({
+        id: user.id,
+        ...userData,
+      });
     } catch ({ code }) {
       return {
         error: code,
+      };
+    }
+  }
+
+  static async upsertProfilePicture(userId, imageBase64) {
+    try {
+      const db = firebase.firestore();
+      const storage = firebase.storage();
+
+      const userRef = db.collection('users').doc(userId);
+      const userData = (await userRef.get()).data();
+
+      if (userData.profile_picture) {
+        const fileToDelete = storage.refFromURL(userData.profile_picture);
+
+        if (fileToDelete) {
+          await fileToDelete.delete();
+        }
+      }
+
+      const imageRef = storage.ref().child(`profile_pictures/${uuid()}`);
+
+      await imageRef.putString(imageBase64, 'base64', {
+        contentType: 'image/jpeg',
+      });
+
+      const profilePicture = await imageRef.getDownloadURL();
+
+      await userRef.set({
+        profile_picture: profilePicture,
+      }, { merge: true });
+
+      if (firebase.auth().currentUser.uid === userId) {
+        await firebase.auth().currentUser.updateProfile({
+          displayName: userData.name,
+          photoURL: profilePicture,
+        });
+      }
+
+      return this.mapUserData({
+        ...userData,
+        profile_picture: profilePicture,
+      });
+    } catch (e) {
+      return {
+        error: 'Houve um erro ao trocar a sua foto.',
       };
     }
   }

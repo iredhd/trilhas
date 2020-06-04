@@ -13,10 +13,11 @@ import { DefaultColors } from '../../../styles';
 const ProfileForm = ({ profile, toggleProfileScreen, handleSubmit }) => {
   const [form, setForm] = useState({ ...profile });
 
-  const onImageUpload = useCallback((profilePicture) => {
+  const onImageUpload = useCallback(({ uri: profilePicture, base64: profilePictureBase64 }) => {
     setForm({
       ...form,
       profilePicture,
+      profilePictureBase64,
     });
   });
 
