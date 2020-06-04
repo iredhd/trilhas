@@ -1,9 +1,10 @@
 {
+  "name": "trailspot-app",
   "main": "node_modules/expo/AppEntry.js",
+  "description": "Trailspot",
   "scripts": {
     "start": "npx run-s start:*",
-    "start:prebuild": "HYGEN_OVERWRITE=1  npx hygen generator app",
-    "start:serve": "expo start -c",
+    "start:prebuild": "run-s prebuild",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -11,10 +12,12 @@
     "release": "npx release-it --no-npm.publish",
     "commit": "npx git-cz",
     "deploy": "npx run-s -l deploy:*",
+    "deploy:prebuild": "run-s prebuild",
     "deploy:login": "node ./scripts/expoLogin.js",
-    "deploy:prebuild": "HYGEN_OVERWRITE=1  npx hygen generator app",
     "deploy:publish": "expo publish -c",
-    "deploy:logout": "expo logout"
+    "deploy:logout": "expo logout",
+    "prebuild": "run-s prebuild:*",
+    "prebuild:app-json-gen": "HYGEN_OVERWRITE=1  npx hygen generator app"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
@@ -66,6 +69,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.1",
+    "git-branch": "^2.0.1",
     "git-cz": "^4.3.1",
     "npm-run-all": "^4.1.5",
     "release-it": "^13.5.0"

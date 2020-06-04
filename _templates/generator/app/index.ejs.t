@@ -3,15 +3,15 @@ to: app.json
 ---
 {
   "expo": {
-    "name": "Trilhas",
-    "slug": "iredhd-trilhas",
+    "name": "<%= h.name %>",
+    "slug": "trailspot",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
-      "android",
+      "android"
     ],
-    "version": "0.0.1-0",
+    "version": "<%= h.version %>",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
