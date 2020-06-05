@@ -1,7 +1,9 @@
 const { description, version } = require('./package.json');
 const gitBranch = require('git-branch');
-const dotenv = require('dotenv');
 const slugify = require('slugify');
+const dotenv = require('dotenv');
+
+const package = require('./package.json');
 
 dotenv.config();
 

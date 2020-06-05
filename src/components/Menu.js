@@ -69,31 +69,51 @@ const Menu = () => {
 
     setIsLoadingVersion(true);
 
-    const { isAvailable } = await Updates.checkForUpdateAsync();
+    try {
+      const { isAvailable } = await Updates.checkForUpdateAsync();
 
-    if (isAvailable) {
+      if (isAvailable) {
+        setPopUp({
+          title: 'Atualização necessária!',
+          body: 'Existe uma nova versão disponível para você. Clique em OK para atualizar.',
+          options: [{
+            label: 'OK',
+            onPress: async () => {
+              setPopUp({
+                title: 'Aguarde...',
+                body: 'Fazendo download da nova versão do aplicativo',
+              });
+
+              await Updates.fetchUpdateAsync();
+
+              setPopUp({
+                title: 'Sucesso!',
+                body: 'A nova versão já foi baixada, pressione "OK" para recarregar a aplicação.',
+                options: [{
+                  label: 'OK',
+                  onPress: Updates.reloadAsync,
+                }],
+              });
+            },
+          }],
+        });
+      } else {
+        setPopUp({
+          title: 'Atualizado!',
+          body: 'Seu aplicativo já está na versão atual.',
+          options: [{
+            label: 'OK',
+            onPress: () => setIsLoadingVersion(false),
+          }],
+        });
+      }
+    } catch (e) {
       setPopUp({
-        title: 'Atualização necessária!',
-        body: 'Existe uma nova versão disponível para você. Clique em OK para atualizar.',
+        title: 'Ops!',
+        body: 'Houve um erro na verificação da versão. Tente novamente mais tarde.',
         options: [{
           label: 'OK',
-          onPress: async () => {
-            setPopUp({
-              title: 'Aguarde...',
-              body: 'Fazendo download da nova versão do aplicativo',
-            });
-
-            await Updates.fetchUpdateAsync();
-
-            setPopUp({
-              title: 'Sucesso!',
-              body: 'A nova versão já foi baixada, pressione "OK" para recarregar a aplicação.',
-              options: [{
-                label: 'OK',
-                onPress: Updates.reloadAsync,
-              }],
-            });
-          },
+          onPress: () => setIsLoadingVersion(false),
         }],
       });
     }
@@ -150,7 +170,6 @@ const Menu = () => {
         title={popUp.title}
         body={popUp.body}
         options={popUp.options}
-        onBackdropPress={() => setIsLoadingVersion(false)}
       />
     </View>
   );
