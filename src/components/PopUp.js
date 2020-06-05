@@ -79,13 +79,14 @@ const styles = StyleSheet.create({
 
 PopUp.defaultProps = {
   onBackdropPress: () => {},
+  options: [],
 };
 
 PopUp.propTypes = {
   isVisible: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
-  options: PropTypes.instanceOf(Array).isRequired,
+  options: PropTypes.instanceOf(Array),
   onBackdropPress: PropTypes.func,
 };
 
