@@ -4,7 +4,7 @@ to: app.json
 {
   "expo": {
     "name": "<%= h.name %>",
-    "slug": "trailspot",
+    "slug": "<%= h.slug %>",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [

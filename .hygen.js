@@ -1,16 +1,17 @@
-const package = require('./package.json');
+const { description, version } = require('./package.json');
 const gitBranch = require('git-branch');
-require('dotenv/config');
+const dotenv = require('dotenv');
+const slugify = require('slugify');
 
-const branchesAllowed = ['master', 'develop'];
+dotenv.config();
 
 const branch = gitBranch.sync();
 
-// if (!branchesAllowed.includes(branch)) {
-//   return new Error(`The deploy just can be executed in master or develop branch.`);
-// }
+const name = branch === 'master' ? description : `${description} [${branch}]`;
 
-const name = branch === 'master' ? package.description : `${package.description} [${branch}]`;
+const slug = slugify(name, {
+  lower: true
+});
 
 let extra = {};
 
@@ -20,8 +21,9 @@ Object.keys(process.env)
 
 module.exports = {
   helpers: {
-    name: name,
-    version: package.version,
+    name,
+    slug,
+    version,
     extra
   }
 };
