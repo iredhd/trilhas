@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import PropTypes from 'prop-types';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useIsDrawerOpen } from '@react-navigation/drawer';
 import { useDispatch, useSelector } from 'react-redux';
+import Constants from 'expo-constants';
+import Updates from 'expo-updates';
 
 import { DefaultColors } from '../styles';
 import CircularImage from './CircularImage';
@@ -12,6 +14,7 @@ import Typography from './Typography';
 import Button from './Button';
 import Badge from './Badge';
 import { logout } from '../store/actions/Auth';
+import PopUp from './PopUp';
 
 const Menu = () => {
   const navigation = useNavigation();
@@ -19,6 +22,13 @@ const Menu = () => {
   const route = useRoute();
   const drawerIsOpen = useIsDrawerOpen();
   const user = useSelector(({ User }) => User);
+  const [isLoadingVersion, setIsLoadingVersion] = useState(false);
+
+  const [popUp, setPopUp] = useState({
+    title: '',
+    body: '',
+    options: [],
+  });
 
   const [menuOptions, setMenuOptions] = useState([{
     name: 'Home',
@@ -50,6 +60,44 @@ const Menu = () => {
       dispatch(logout());
     },
   }]);
+
+  const handleVersionVerification = useCallback(async () => {
+    setPopUp({
+      title: 'Aguarde...',
+      body: 'Estamos verificando se existe uma nova versão para você.',
+    });
+
+    setIsLoadingVersion(true);
+
+    const { isAvailable } = await Updates.checkForUpdateAsync();
+
+    if (isAvailable) {
+      setPopUp({
+        title: 'Atualização necessária!',
+        body: 'Existe uma nova versão disponível para você. Clique em OK para atualizar.',
+        options: [{
+          label: 'OK',
+          onPress: async () => {
+            setPopUp({
+              title: 'Aguarde...',
+              body: 'Fazendo download da nova versão do aplicativo',
+            });
+
+            await Updates.fetchUpdateAsync();
+
+            setPopUp({
+              title: 'Sucesso!',
+              body: 'A nova versão já foi baixada, pressione "OK" para recarregar a aplicação.',
+              options: [{
+                label: 'OK',
+                onPress: Updates.reloadAsync,
+              }],
+            });
+          },
+        }],
+      });
+    }
+  });
 
   useEffect(() => {
     if (drawerIsOpen) {
@@ -88,6 +136,21 @@ const Menu = () => {
         showsVerticalScrollIndicator={false}
         bounces={false}
         contentContainerStyle={styles.optionsContainer}
+      />
+      {!__DEV__ && (
+      <View style={styles.versionContainer}>
+        <Button
+          onPress={handleVersionVerification}
+          value={`Versão: ${Constants.manifest.version}`}
+        />
+      </View>
+      )}
+      <PopUp
+        isVisible={isLoadingVersion}
+        title={popUp.title}
+        body={popUp.body}
+        options={popUp.options}
+        onBackdropPress={() => setIsLoadingVersion(false)}
       />
     </View>
   );
@@ -157,6 +220,9 @@ const styles = StyleSheet.create({
   },
   optionButtonContainer: {
     flex: 1,
+  },
+  versionContainer: {
+    alignItems: 'center',
   },
 });
 

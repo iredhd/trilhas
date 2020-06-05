@@ -34,6 +34,7 @@
     "expo-constants": "~8.0.0",
     "expo-image-picker": "~8.0.1",
     "expo-permissions": "~8.0.0",
+    "expo-updates": "~0.0.1-rc.0",
     "firebase": "^7.14.6",
     "fs": "^0.0.1-security",
     "hygen": "^5.0.3",
