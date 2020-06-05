@@ -1,8 +1,8 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn start
+  /usr/local/bin/node /usr/local/bin/yarn add @types/react-native-keyboard-aware-scrollview -D
 
 PATH: 
-  /usr/local/opt/ncurses/bin:/Users/ighor/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/ighor/.zinit/polaris/bin:/usr/local/opt/ncurses/bin:/Users/ighor/bin
+  /usr/local/opt/ncurses/bin:/Users/ighor/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/usr/local/opt/ncurses/bin:/Users/ighor/bin:/Users/ighor/.zinit/polaris/bin
 
 Yarn version: 
   1.22.0
@@ -14,12 +14,17 @@ Platform:
   darwin x64
 
 Trace: 
-  SyntaxError: /Users/ighor/code/iredhd-trilhas/package.json: Unexpected token / in JSON at position 196
-      at JSON.parse (<anonymous>)
-      at /usr/local/lib/node_modules/yarn/lib/cli.js:1625:59
-      at Generator.next (<anonymous>)
-      at step (/usr/local/lib/node_modules/yarn/lib/cli.js:310:30)
-      at /usr/local/lib/node_modules/yarn/lib/cli.js:321:13
+  Error: https://registry.yarnpkg.com/@types%2freact-native-keyboard-aware-scrollview: Not found
+      at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:66975:18)
+      at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:140727:22)
+      at Request.emit (events.js:223:5)
+      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141699:10)
+      at Request.emit (events.js:223:5)
+      at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141621:12)
+      at Object.onceWrapper (events.js:312:28)
+      at IncomingMessage.emit (events.js:228:7)
+      at endReadableNT (_stream_readable.js:1185:12)
+      at processTicksAndRejections (internal/process/task_queues.js:81:21)
 
 npm manifest: 
   {
@@ -28,20 +33,22 @@ npm manifest:
     "description": "Trailspot",
     "scripts": {
       "start": "npx run-s start:*",
-      "start:prebuild": "run -s prebuild",
-      // "start:serve": "expo start -c",
+      "start:prebuild": "run-s app-json-gen",
+      "start:serve": "expo start -c",
       "android": "expo start --android",
       "ios": "expo start --ios",
       "web": "expo start --web",
       "eject": "expo eject",
-      "release": "npx release-it --no-npm.publish",
-      "commit": "npx git-cz",
-      "deploy": "npx run-s -l deploy:*",
-      "deploy:login": "node ./scripts/expoLogin.js",
-      "deploy:prebuild": "run -s prebuild",
-      "deploy:publish": "expo publish -c",
-      "deploy:logout": "expo logout",
-      "prebuild": "HYGEN_OVERWRITE=1  npx hygen generator app"
+      "release": "release-it --no-npm.publish",
+      "commit": "git-cz",
+      "deploy": "run-s -l deploy:*",
+      "deploy:validate": "node ./scripts/deployValidation.js",
+      "deploy:validated": "run-s -l publish:*",
+      "publish:prebuild": "run-s app-json-gen",
+      "publish:login": "node ./scripts/expoLogin.js",
+      "publish:publish": "expo publish -c",
+      "publish:logout": "expo logout",
+      "app-json-gen": "HYGEN_OVERWRITE=1  npx hygen generator app"
     },
     "dependencies": {
       "@expo/vector-icons": "^10.0.0",
@@ -52,20 +59,21 @@ npm manifest:
       "@react-navigation/stack": "^5.2.8",
       "axios": "^0.19.2",
       "base-64": "^0.1.0",
-      "dotenv": "^8.2.0",
       "expo": "~36.0.0",
       "expo-constants": "~8.0.0",
       "expo-image-picker": "~8.0.1",
       "expo-permissions": "~8.0.0",
+      "expo-updates": "~0.0.1-rc.0",
       "firebase": "^7.14.6",
-      "fs": "^0.0.1-security",
-      "hygen": "^5.0.3",
+      "git-branch": "^2.0.1",
+      "lodash": "^4.17.15",
       "prop-types": "^15.7.2",
       "react": "~16.9.0",
       "react-dom": "~16.9.0",
       "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
       "react-native-gesture-handler": "~1.5.0",
       "react-native-image-viewing": "^0.2.0",
+      "react-native-keyboard-aware-scrollview": "^2.1.0",
       "react-native-modal": "^11.5.6",
       "react-native-reanimated": "~1.4.0",
       "react-native-safe-area-context": "0.6.0",
@@ -87,19 +95,21 @@ npm manifest:
       "babel-plugin-inline-dotenv": "^1.5.0",
       "babel-plugin-transform-inline-environment-variables": "^0.4.3",
       "babel-preset-expo": "~8.0.0",
+      "dotenv": "^8.2.0",
       "eslint": "^6.8.0",
       "eslint-config-airbnb": "^18.1.0",
       "eslint-plugin-import": "^2.20.1",
       "eslint-plugin-jsx-a11y": "^6.2.3",
       "eslint-plugin-react": "^7.19.0",
       "eslint-plugin-react-hooks": "^2.5.1",
-      "git-branch": "^2.0.1",
       "git-cz": "^4.3.1",
+      "hygen": "^5.0.3",
       "npm-run-all": "^4.1.5",
-      "release-it": "^13.5.0"
+      "release-it": "^13.5.0",
+      "slugify": "^1.4.0"
     },
     "private": true,
-    "version": "0.0.1-10"
+    "version": "0.0.1-12"
   }
 
 yarn manifest: 
@@ -3844,6 +3854,11 @@ Lockfile:
       "@types/websql" "^0.0.27"
       lodash "^4.17.15"
   
+  expo-updates@~0.0.1-rc.0:
+    version "0.0.1-rc.3"
+    resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-0.0.1-rc.3.tgz#0d925038d8d4eb9890d72de8076535ed5603b782"
+    integrity sha512-3M4zteIuaYlVSSvyIWP1h0X6KpyZliL00Zge2MdlGtH+Mda6byNA7UyVOgaP+QYQL1zzgM0YjPucQRLJ9dZpRg==
+  
   expo-web-browser@~8.0.0:
     version "8.0.0"
     resolved "https://registry.yarnpkg.com/expo-web-browser/-/expo-web-browser-8.0.0.tgz#8a4451c744c115569a4c810dac8851f219a21c72"
@@ -4279,11 +4294,6 @@ Lockfile:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
     integrity sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
-  
-  fs@^0.0.1-security:
-    version "0.0.1-security"
-    resolved "https://registry.yarnpkg.com/fs/-/fs-0.0.1-security.tgz#8a7bd37186b6dddf3813f23858b57ecaaf5e41d4"
-    integrity sha1-invTcYa23d84E/I4WLV+yq9eQdQ=
   
   fsevents@^1.2.7:
     version "1.2.12"
@@ -6925,6 +6935,11 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.1.tgz#645e2ffbbb49e80844bb4cbbe34a126fda1e6772"
     integrity sha512-/VbpIEp8tSNNHIvstuA3Swx610whci1Zpc9mqNkqn14DkMbw+ORviln2u0XyHG1kPvvwTNGZY6QpeFwxYaSdbQ==
   
+  react-native-keyboard-aware-scrollview@^2.1.0:
+    version "2.1.0"
+    resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scrollview/-/react-native-keyboard-aware-scrollview-2.1.0.tgz#418a6b868f4cf2f9d28e77914f11ecbf8ae8e556"
+    integrity sha512-XfWozWFPhdecfxN+wuqERX3mCGDrAim5siC6TWg3Qw7wK/zlwIwe1UIsHDNOQCzf9oIh0SkZXvoOFsMrnyIVmQ==
+  
   react-native-modal@^11.5.6:
     version "11.5.6"
     resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-11.5.6.tgz#bb25a78c35a5e24f45de060e5f64284397d38a87"
@@ -7674,6 +7689,11 @@ Lockfile:
     version "1.1.6"
     resolved "https://registry.yarnpkg.com/slide/-/slide-1.1.6.tgz#56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707"
     integrity sha1-VusCfWW00tzmyy4tMsTUr8nh1wc=
+  
+  slugify@^1.4.0:
+    version "1.4.0"
+    resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.4.0.tgz#c9557c653c54b0c7f7a8e786ef3431add676d2cb"
+    integrity sha512-FtLNsMGBSRB/0JOE2A0fxlqjI6fJsgHGS13iTuVT28kViI4JjUiNqp/vyis0ZXYcMnpR3fzGNkv+6vRlI2GwdQ==
   
   snake-case@^2.1.0:
     version "2.1.0"

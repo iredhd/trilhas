@@ -7,6 +7,7 @@ import { DefaultColors } from '../styles';
 const Input = ({
   placeholder, onChangeText, secureTextEntry, containerStyle, value,
   multiline, numberOfLines, keyboardType, autoCapitalize,
+  onFocus,
 }) => (
   <View style={[
     styles.container,
@@ -18,6 +19,7 @@ const Input = ({
   ]}
   >
     <TextInput
+      onFocus={onFocus}
       multiline={multiline}
       placeholder={placeholder}
       placeholderTextColor={`rgb(${DefaultColors.secondary})`}
@@ -57,6 +59,7 @@ Input.defaultProps = {
   numberOfLines: 1,
   keyboardType: 'default',
   autoCapitalize: 'sentences',
+  onFocus: () => {},
 };
 
 Input.propTypes = {
@@ -69,6 +72,7 @@ Input.propTypes = {
   numberOfLines: PropTypes.number,
   keyboardType: PropTypes.string,
   autoCapitalize: PropTypes.string,
+  onFocus: PropTypes.func,
 };
 
 export default Input;

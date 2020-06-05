@@ -62,6 +62,10 @@ const CircularImage = ({
     setIsLoading(false);
   });
 
+  const handleError = useCallback(() => {
+    setImageToView(NoImage);
+  });
+
   useEffect(() => {
     setImageToView(image);
   }, [image]);
@@ -76,6 +80,7 @@ const CircularImage = ({
         resizeMode="cover"
         onLoadStart={onLoadStart}
         onLoadEnd={onLoadEnd}
+        onError={handleError}
         source={typeof imageToView === 'string' ? { uri: imageToView } : imageToView || NoImage}
         style={[
           styles.imageContainer,

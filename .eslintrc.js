@@ -28,7 +28,8 @@ module.exports = {
     "import/no-cycle": "off",
     "eslint-disable react/default-props-match-prop-types": "off",
     "import/prefer-default-export": "off",
-    "max-len": "off"
+    "max-len": "off",
+    "no-underscore-dangle": "off"
   },
   globals: {
     '__DEV__': true

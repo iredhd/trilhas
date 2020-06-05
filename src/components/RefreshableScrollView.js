@@ -1,13 +1,15 @@
 import React from 'react';
-import { ScrollView, RefreshControl } from 'react-native';
+import { RefreshControl } from 'react-native';
 import PropTypes from 'prop-types';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 
 import { DefaultColors } from '../styles';
 
 const RefreshableScrollView = ({
   children, contentContainerStyle, refreshing, onRefresh,
 }) => (
-  <ScrollView
+  <KeyboardAwareScrollView
+    enableOnAndroid
     showsVerticalScrollIndicator={false}
     contentContainerStyle={contentContainerStyle}
     refreshControl={(
@@ -20,7 +22,7 @@ const RefreshableScrollView = ({
   )}
   >
     {children}
-  </ScrollView>
+  </KeyboardAwareScrollView>
 );
 
 RefreshableScrollView.defaultProps = {

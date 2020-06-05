@@ -1,4 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, {
+  useState, useCallback, useEffect,
+} from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
@@ -76,12 +78,12 @@ const Profile = () => {
           isLoading={isLoading}
         >
           {!isLoading && (
-          <RefreshableScrollView
-            contentContainerStyle={styles.profileContainer}
-            refreshing={isRefreshing}
-            onRefresh={handleRefresh}
-          >
-            {
+            <RefreshableScrollView
+              contentContainerStyle={styles.profileContainer}
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+            >
+              {
               isEditing ? (
                 <ProfileForm
                   profile={profile}
@@ -95,7 +97,7 @@ const Profile = () => {
                 />
               )
             }
-          </RefreshableScrollView>
+            </RefreshableScrollView>
           )}
         </LoadingWrapper>
       </View>
