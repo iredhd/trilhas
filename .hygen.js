@@ -3,8 +3,6 @@ const gitBranch = require('git-branch');
 const slugify = require('slugify');
 const dotenv = require('dotenv');
 
-const package = require('./package.json');
-
 dotenv.config();
 
 const branch = gitBranch.sync();
