@@ -41,6 +41,10 @@ class User {
         payload.city_name = user.cityName;
       }
 
+      if (user.cityId) {
+        payload.city_id = user.cityId;
+      }
+
       if (typeof user.isGuide === 'boolean') {
         payload.is_guide = user.isGuide;
       }

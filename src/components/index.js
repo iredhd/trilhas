@@ -17,6 +17,7 @@ import RefreshableScrollView from './RefreshableScrollView';
 import Spacer from './Spacer';
 import Switch from './Switch';
 import PopUp from './PopUp';
+import AutoCompleteInput from './AutoCompleteInput';
 
 export {
   Background,
@@ -38,4 +39,5 @@ export {
   Spacer,
   Switch,
   PopUp,
+  AutoCompleteInput,
 };

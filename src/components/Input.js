@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 
@@ -7,30 +7,50 @@ import { DefaultColors } from '../styles';
 const Input = ({
   placeholder, onChangeText, secureTextEntry, containerStyle, value,
   multiline, numberOfLines, keyboardType, autoCapitalize,
-  onFocus,
-}) => (
-  <View style={[
-    styles.container,
-    multiline && {
-      height: 40 * numberOfLines,
-      justifyContent: 'flex-start',
-    },
-    containerStyle,
-  ]}
-  >
-    <TextInput
-      onFocus={onFocus}
-      multiline={multiline}
-      placeholder={placeholder}
-      placeholderTextColor={`rgb(${DefaultColors.secondary})`}
-      secureTextEntry={secureTextEntry}
-      onChangeText={onChangeText}
-      value={value}
-      keyboardType={keyboardType}
-      autoCapitalize={autoCapitalize}
-    />
-  </View>
-);
+  onFocus, required,
+}) => {
+  const [showRequiredBorder, setShowRequiredBorder] = useState(false);
+
+  const handleChangeText = useCallback((text) => {
+    onChangeText(text);
+  });
+
+  const handleBlur = useCallback(({ nativeEvent }) => {
+    if (required && !nativeEvent.text.trim()) {
+      setShowRequiredBorder(true);
+    } else {
+      setShowRequiredBorder(false);
+    }
+  });
+
+  return (
+    <View style={[
+      styles.container,
+      multiline && {
+        height: 40 * numberOfLines,
+        justifyContent: 'flex-start',
+      },
+      showRequiredBorder && !value.trim() && {
+        borderColor: `rgb(${DefaultColors.danger})`,
+      },
+      containerStyle,
+    ]}
+    >
+      <TextInput
+        onBlur={handleBlur}
+        onFocus={onFocus}
+        multiline={multiline}
+        placeholder={placeholder}
+        placeholderTextColor={`rgb(${DefaultColors.secondary})`}
+        secureTextEntry={secureTextEntry}
+        onChangeText={handleChangeText}
+        value={value}
+        keyboardType={keyboardType}
+        autoCapitalize={autoCapitalize}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -60,6 +80,7 @@ Input.defaultProps = {
   keyboardType: 'default',
   autoCapitalize: 'sentences',
   onFocus: () => {},
+  required: false,
 };
 
 Input.propTypes = {
@@ -73,6 +94,7 @@ Input.propTypes = {
   keyboardType: PropTypes.string,
   autoCapitalize: PropTypes.string,
   onFocus: PropTypes.func,
+  required: PropTypes.bool,
 };
 
 export default Input;

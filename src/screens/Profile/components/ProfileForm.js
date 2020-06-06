@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 
 import {
-  Switch, Button, CircularImage, Spacer, Input, Typography,
+  Switch, Button, CircularImage, Spacer, Input, Typography, AutoCompleteInput,
 } from '../../../components';
 import { DefaultColors } from '../../../styles';
 
@@ -11,6 +11,7 @@ const ProfileForm = ({
   profile, toggleProfileScreen, handleSubmit,
 }) => {
   const [form, setForm] = useState({ ...profile });
+  const [submitDisabled, setSubmitDisabled] = useState(false);
 
   const onImageUpload = useCallback(({ uri: profilePicture, base64: profilePictureBase64 }) => {
     setForm({
@@ -23,6 +24,14 @@ const ProfileForm = ({
   const onSubmit = useCallback(() => {
     handleSubmit(form);
   });
+
+  useEffect(() => {
+    if (!form.name.trim() || !form.cityName.trim() || !form.bio.trim()) {
+      setSubmitDisabled(true);
+    } else {
+      setSubmitDisabled(false);
+    }
+  }, [form]);
 
   useEffect(() => {
     setForm({
@@ -54,18 +63,23 @@ const ProfileForm = ({
         </View>
         <Spacer size={7.5} />
         <Input
+          required
           placeholder="Nome"
           value={form.name}
           onChangeText={(name) => setForm({ ...form, name })}
         />
         <Spacer size={7.5} />
-        <Input
+        <AutoCompleteInput
+          required
           placeholder="Cidade"
           value={form.cityName}
-          onChangeText={(cityName) => setForm({ ...form, cityName })}
+          onPress={({ cityName, id: cityId }) => {
+            setForm({ ...form, cityName, cityId });
+          }}
         />
         <Spacer size={7.5} />
         <Input
+          required
           multiline
           placeholder="Descrição"
           value={form.bio}
@@ -75,6 +89,7 @@ const ProfileForm = ({
       </View>
       <View style={styles.buttonsContainer}>
         <Button
+          disabled={submitDisabled}
           value="ATUALIZAR DADOS"
           onPress={onSubmit}
         />

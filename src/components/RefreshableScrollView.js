@@ -9,6 +9,7 @@ const RefreshableScrollView = ({
   children, contentContainerStyle, refreshing, onRefresh,
 }) => (
   <KeyboardAwareScrollView
+    keyboardShouldPersistTaps="handled"
     enableOnAndroid
     showsVerticalScrollIndicator={false}
     contentContainerStyle={contentContainerStyle}
