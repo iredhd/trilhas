@@ -21,9 +21,10 @@ const Menu = () => {
   const dispatch = useDispatch();
   const route = useRoute();
   const drawerIsOpen = useIsDrawerOpen();
-  const user = useSelector(({ User }) => User);
-  const [isLoadingVersion, setIsLoadingVersion] = useState(false);
+  const userState = useSelector(({ User }) => User);
 
+  const [user, setUser] = useState(userState);
+  const [isLoadingVersion, setIsLoadingVersion] = useState(false);
   const [popUp, setPopUp] = useState({
     title: '',
     body: '',
@@ -127,6 +128,10 @@ const Menu = () => {
       })));
     }
   }, [drawerIsOpen]);
+
+  useEffect(() => {
+    setUser(userState);
+  }, [userState]);
 
   return (
     <View style={styles.menuContainer}>

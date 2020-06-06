@@ -7,6 +7,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import 'firebase/firestore';
 import { decode, encode } from 'base-64';
 import _ from 'lodash';
+import Constants from 'expo-constants';
+import axios from 'axios';
 
 import Router from './src/routes';
 import { store, persistor } from './src/store';
@@ -31,6 +33,8 @@ console.warn = (message) => {
     _console.warn(message);
   }
 };
+
+axios.defaults.baseURL = Constants.manifest.extra.EXPO_FIREBASE_API;
 
 export default function App() {
   return (

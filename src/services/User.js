@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import uuid from 'uuid-random';
+import axios from 'axios';
 
 class User {
   static async getUser(id) {
@@ -67,45 +67,13 @@ class User {
     }
   }
 
-  static async upsertProfilePicture(userId, imageBase64) {
+  static async upsertProfilePicture(userId, image) {
     try {
-      const db = firebase.firestore();
-      const storage = firebase.storage();
-
-      const userRef = db.collection('users').doc(userId);
-      const userData = (await userRef.get()).data();
-
-      if (userData.profile_picture) {
-        const fileToDelete = storage.refFromURL(userData.profile_picture);
-
-        if (fileToDelete) {
-          await fileToDelete.delete();
-        }
-      }
-
-      const imageRef = storage.ref().child(`profile_pictures/${uuid()}`);
-
-      await imageRef.putString(imageBase64, 'base64', {
-        contentType: 'image/jpeg',
+      const { data: userData } = await axios.post('/users/profile-picture', {
+        image,
       });
 
-      const profilePicture = await imageRef.getDownloadURL();
-
-      await userRef.set({
-        profile_picture: profilePicture,
-      }, { merge: true });
-
-      if (firebase.auth().currentUser.uid === userId) {
-        await firebase.auth().currentUser.updateProfile({
-          displayName: userData.name,
-          photoURL: profilePicture,
-        });
-      }
-
-      return this.mapUserData({
-        ...userData,
-        profile_picture: profilePicture,
-      });
+      return this.mapUserData(userData);
     } catch (e) {
       return {
         error: 'Houve um erro ao trocar a sua foto.',

@@ -14,15 +14,29 @@ export const loginWithEmailAndPassword = (email, password) => async (dispatch) =
   return dispatch(storeData(AuthData));
 };
 
-export const storeData = (AuthData) => async (dispatch) => {
-  dispatch(registerData(AuthData.user));
+export const storeData = ({ user, token }) => async (dispatch, getState) => {
+  const actualToken = getState().Auth.token;
 
+  dispatch(registerData(user));
+
+  if (actualToken !== token) {
+    dispatch(storeToken(token));
+  }
+};
+
+export const storeToken = (token) => (dispatch) => {
   dispatch({
     type: ActionTypes.AUTH_LOGGED_IN,
     payload: {
-      token: AuthData.token,
+      token,
     },
   });
+};
+
+export const refreshAuthData = (newAuthData) => async (dispatch) => {
+  const AuthData = await Auth.refreshAuthData(newAuthData);
+
+  dispatch(storeData(AuthData));
 };
 
 export const requestLogin = () => ({

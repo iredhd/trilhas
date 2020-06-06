@@ -28,6 +28,17 @@ class Auth {
     }
   }
 
+  static async refreshAuthData() {
+    const token = await firebase.auth().currentUser.getIdToken();
+
+    const user = await User.getUser(firebase.auth().currentUser.uid);
+
+    return {
+      user,
+      token,
+    };
+  }
+
   static handleErrors(error) {
     switch (error) {
       case 'auth/invalid-email':
