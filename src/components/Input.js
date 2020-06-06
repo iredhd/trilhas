@@ -15,8 +15,8 @@ const Input = ({
     onChangeText(text);
   });
 
-  const handleBlur = useCallback(({ nativeEvent }) => {
-    if (required && !nativeEvent.text.trim()) {
+  const handleBlur = useCallback(() => {
+    if (required && !value.trim()) {
       setShowRequiredBorder(true);
     } else {
       setShowRequiredBorder(false);
@@ -29,6 +29,7 @@ const Input = ({
       multiline && {
         height: 40 * numberOfLines,
         justifyContent: 'flex-start',
+        paddingVertical: 5,
       },
       showRequiredBorder && !value.trim() && {
         borderColor: `rgb(${DefaultColors.danger})`,
@@ -38,6 +39,7 @@ const Input = ({
     >
       <TextInput
         onBlur={handleBlur}
+        onSubmitEditing={handleBlur}
         onFocus={onFocus}
         multiline={multiline}
         placeholder={placeholder}
