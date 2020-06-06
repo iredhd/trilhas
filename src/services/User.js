@@ -21,6 +21,43 @@ class User {
     }
   }
 
+  static async getUsers({ text, page }) {
+    const perPage = 50;
+    const offset = page * perPage;
+    const limit = offset + perPage;
+
+    const db = firebase.firestore();
+
+    const userRef = db.collection('users');
+
+    const userResult = await userRef
+      .where('is_guide', '==', true)
+      // .orderBy('name', 'asc')
+      .get();
+
+    if (userResult.empty) {
+      return [];
+    }
+
+    const users = [];
+
+    userResult.forEach((user) => {
+      users.push(
+        this.mapUserData({
+          ...user.data(),
+          id: user.id,
+        }),
+      );
+    });
+
+    const filteredUsers = users
+      .filter((user) => user.name.toLowerCase().indexOf(text.toLowerCase()) >= 0)
+      .filter((_, index) => index >= offset && index < limit)
+      .sort((a, b) => a.name > b.name);
+
+    return filteredUsers;
+  }
+
   static async upsertUser(user) {
     try {
       const db = firebase.firestore();

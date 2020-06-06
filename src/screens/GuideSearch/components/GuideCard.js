@@ -10,7 +10,9 @@ const GuideCard = ({ item }) => {
   const navigation = useNavigation();
 
   const handleCardPress = useCallback(() => {
-    navigation.navigate('Profile');
+    navigation.navigate('Profile', {
+      id: item.id,
+    });
   });
 
   return (

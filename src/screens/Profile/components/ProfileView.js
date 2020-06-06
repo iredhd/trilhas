@@ -50,7 +50,7 @@ const ProfileView = ({ profile, toggleProfileScreen }) => {
             onPress={toggleProfileScreen}
           />
         ) : (
-          <View>
+          <View style={styles.buttonsContainer}>
             <Button
               value="ENVIAR MENSAGEM"
               onPress={() => navigation.navigate('Chat')}
@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

@@ -5,6 +5,7 @@ import {
   PrivateRoute, Input, Button, LoadingWrapper, List,
 } from '../../components';
 import { GuideCard } from './components';
+import { User } from '../../services';
 
 const GuideSearch = () => {
   const [search, setSearch] = useState('');
@@ -13,22 +14,12 @@ const GuideSearch = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [page, setPage] = useState(0);
   const [isPaginating, setIsPaginating] = useState(false);
+  const [totallyPaginated, setTotallyPaginated] = useState(false);
 
-  const loadGuides = useCallback(() => new Promise((resolve) => {
-    setTimeout(() => {
-      const newGuides = [];
-      for (let index = 0; index < 50; index += 1) {
-        newGuides.push({
-          id: Math.random().toString(),
-          name: 'Ighor Redhd',
-          profilePicture: 'https://instagram.fssz1-1.fna.fbcdn.net/v/t51.2885-19/s150x150/82164289_3835525919805869_7911970237640081408_n.jpg?_nc_ht=instagram.fssz1-1.fna.fbcdn.net&_nc_ohc=gQP0WoRPsx8AX9JKs-F&oh=1bfd73a3604a0e5d3c4d2d18eaf1c7ba&oe=5EFBA0FB',
-          cityName: 'Santos, SP - Brazil',
-          bio: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-        });
-      }
-      resolve(newGuides);
-    }, 1 * 1000);
-  }));
+  const loadGuides = useCallback(async ({ text, offset }) => {
+    const guidesResult = await User.getUsers({ text, page: offset });
+    return guidesResult;
+  });
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -38,20 +29,31 @@ const GuideSearch = () => {
   });
 
   const initialLoad = useCallback(async () => {
-    setIsLoading(true);
-    const loadedGuides = await loadGuides();
-    setGuides(loadedGuides);
-    setIsLoading(false);
+    // setIsLoading(true);
+    // const loadedGuides = await loadGuides();
+    // setGuides(loadedGuides);
+    // setIsLoading(false);
   });
 
   const handlePaginate = useCallback(async () => {
-    if (isPaginating) {
+    if (isPaginating || totallyPaginated) {
       return;
     }
 
     setIsPaginating(true);
-    setPage(page + 1);
-    const loadedGuides = await loadGuides();
+
+    const offset = page + 1;
+    setPage(offset);
+
+    const loadedGuides = await loadGuides({
+      text: search,
+      offset,
+    });
+
+    if (!loadedGuides.length) {
+      setTotallyPaginated(true);
+    }
+
     setGuides([...guides, ...loadedGuides]);
     setIsPaginating(false);
   });
@@ -60,7 +62,11 @@ const GuideSearch = () => {
     setIsLoading(true);
     setPage(0);
     setIsLoading(true);
-    const loadedGuides = await loadGuides();
+    setTotallyPaginated(false);
+    const loadedGuides = await loadGuides({
+      text: search,
+      offset: 0,
+    });
     setGuides(loadedGuides);
     setIsLoading(false);
   });
@@ -83,7 +89,7 @@ const GuideSearch = () => {
           <Button
             value="BUSCAR"
             onPress={handleSearch}
-            disabled={isLoading}
+            disabled={isLoading || !search}
           />
         </View>
         <LoadingWrapper

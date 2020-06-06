@@ -71,6 +71,11 @@ const Profile = () => {
     initialLoad();
   }, []);
 
+  useEffect(() => {
+    setIsRefreshing(false);
+    initialLoad();
+  }, [userId]);
+
   return (
     <PrivateRoute>
       <View style={styles.container}>

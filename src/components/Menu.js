@@ -35,6 +35,8 @@ const Menu = () => {
     name: 'Home',
     label: 'Home',
     badge: null,
+    disabled: false,
+    disabledFunc: ({ actualRoute }) => actualRoute.state.routeNames[actualRoute.state.index] === 'Home',
     action: () => {
       navigation.navigate('Home');
     },
@@ -42,13 +44,20 @@ const Menu = () => {
     name: 'Profile',
     label: 'Minhas informações',
     badge: null,
+    disabled: false,
+    disabledFunc: ({ actualRoute, actualUserState }) => actualRoute.state.routes[actualRoute.state.index].name === 'Profile' && actualRoute.state.routes[actualRoute.state.index].params?.id === actualUserState.id,
     action: () => {
-      navigation.navigate('Profile');
+      navigation.navigate('Profile', {
+        id: userState.id,
+      });
     },
   }, {
     name: 'Chats',
     label: 'Conversas',
     badge: 5,
+    disabled: false,
+    disabledFunc: () => {
+    },
     action: () => {
       navigation.navigate('Chats');
     },
@@ -57,6 +66,10 @@ const Menu = () => {
     name: 'logout',
     label: 'Sair',
     badge: null,
+    disabled: false,
+    disabledFunc: () => {
+      // return route.state.routeNames[route.state.index] === 'Home';
+    },
     action: () => {
       dispatch(logout());
     },
@@ -124,10 +137,13 @@ const Menu = () => {
     if (drawerIsOpen) {
       setMenuOptions(menuOptions.map((option) => ({
         ...option,
-        disabled: option.name === route.state.routeNames[route.state.index],
+        disabled: option.disabledFunc({
+          actualRoute: route,
+          actualUserState: userState,
+        }),
       })));
     }
-  }, [drawerIsOpen]);
+  }, [drawerIsOpen, route]);
 
   useEffect(() => {
     setUser(userState);
