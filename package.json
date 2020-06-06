@@ -3,7 +3,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "description": "Trailspot",
   "scripts": {
-    "start": "npx run-s start:*",
+    "start": "run-s start:*",
     "start:prebuild": "run-s app-json-gen",
     "start:serve": "expo start -c",
     "android": "expo start --android",
@@ -12,6 +12,12 @@
     "eject": "expo eject",
     "release": "release-it --no-npm.publish",
     "commit": "git-cz",
+    "firebase:serve": "run-s firebase:serve:*",
+    "firebase:serve:pre-serve": "run-s firebase-functions-json-gen",
+    "firebase:serve:start": "firebase emulators:start --only functions",
+    "firebase:deploy": "run-s firebase:deploy:*",
+    "firebase:deploy:pre-deploy": "run-s firebase-functions-json-gen",
+    "firebase:deploy:start": "firebase deploy --only functions",
     "deploy": "run-s -l deploy:*",
     "deploy:validate": "node ./scripts/deployValidation.js",
     "deploy:validated": "run-s -l publish:*",
@@ -19,7 +25,8 @@
     "publish:login": "node ./scripts/expoLogin.js",
     "publish:publish": "expo publish -c",
     "publish:logout": "expo logout",
-    "app-json-gen": "HYGEN_OVERWRITE=1  npx hygen generator app"
+    "app-json-gen": "HYGEN_OVERWRITE=1 hygen generator app",
+    "firebase-functions-json-gen": "HYGEN_OVERWRITE=1 hygen generator functions"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
@@ -73,6 +80,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.1",
+    "firebase-tools": "^8.4.2",
     "git-cz": "^4.3.1",
     "hygen": "^5.0.3",
     "npm-run-all": "^4.1.5",

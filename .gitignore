@@ -17,3 +17,5 @@ web-report/
 package-lock.json
 app.json
 firebaseConfig.js
+.firebaserc
+*.log

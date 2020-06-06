@@ -3,15 +3,15 @@ to: app.json
 ---
 {
   "expo": {
-    "name": "<%= h.name %>",
-    "slug": "<%= h.slug %>",
+    "name": "<%= h.app.name %>",
+    "slug": "<%= h.app.slug %>",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android"
     ],
-    "version": "<%= h.version %>",
+    "version": "<%= h.app.version %>",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -28,6 +28,6 @@ to: app.json
     "ios": {
       "supportsTablet": false
     },
-    "extra": <%- JSON.stringify(h.extra) %>
+    "extra": <%- JSON.stringify(h.app.extra) %>
   }
 }
