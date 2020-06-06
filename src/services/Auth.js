@@ -7,11 +7,13 @@ class Auth {
     try {
       const { user: AuthData } = await firebase.auth().signInWithEmailAndPassword(email, password);
 
+      const token = await firebase.auth().currentUser.getIdToken();
+
       const user = await User.getUser(AuthData.uid);
 
       return {
         user,
-        token: user.refreshToken,
+        token,
       };
     } catch ({ code }) {
       return {
