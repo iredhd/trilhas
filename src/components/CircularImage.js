@@ -11,6 +11,7 @@ import { DefaultColors } from '../styles';
 import PopUp from './PopUp';
 import NoImage from '../../assets/icon.png';
 import Loading from './Loading';
+import Icon from './Icon';
 
 const CircularImage = ({
   image, radius, allowImageViewing, allowImageUpload, onImageUpload,
@@ -85,14 +86,22 @@ const CircularImage = ({
         style={[
           styles.imageContainer,
           { width: radius * 2, height: radius * 2, borderRadius: radius },
+          allowImageUpload && { opacity: 0.7 },
         ]}
       />
+      {!isLoading && allowImageUpload && (
+      <View style={styles.overImageView}>
+        <Icon
+          icon="camera"
+          size={radius / 2}
+        />
+      </View>
+      )}
       {isLoading && (
-      <View style={styles.loadingContainer}>
+      <View style={styles.overImageView}>
         <Loading size="large" />
       </View>
       )}
-
       {allowImageViewing && (
       <ImageView
         images={[{
@@ -131,7 +140,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     resizeMode: 'cover',
   },
-  loadingContainer: {
+  overImageView: {
     position: 'absolute',
   },
 });
