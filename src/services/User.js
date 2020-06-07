@@ -51,7 +51,9 @@ class User {
     });
 
     const filteredUsers = users
-      .filter((user) => user.name.toLowerCase().indexOf(text.toLowerCase()) >= 0)
+      .filter((user) => user.name.toLowerCase().indexOf(text.toLowerCase()) >= 0
+      || user.bio.toLowerCase().indexOf(text.toLowerCase()) >= 0
+      || user.cityName.toLowerCase().indexOf(text.toLowerCase()) >= 0)
       .filter((_, index) => index >= offset && index < limit)
       .sort((a, b) => a.name > b.name);
 
