@@ -6,7 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useIsDrawerOpen } from '@react-navigation/drawer';
 import { useDispatch, useSelector } from 'react-redux';
 import Constants from 'expo-constants';
-import Updates from 'expo-updates';
+import { Updates } from 'expo';
 
 import { DefaultColors } from '../styles';
 import CircularImage from './CircularImage';
@@ -67,9 +67,7 @@ const Menu = () => {
     label: 'Sair',
     badge: null,
     disabled: false,
-    disabledFunc: () => {
-      // return route.state.routeNames[route.state.index] === 'Home';
-    },
+    disabledFunc: () => {},
     action: () => {
       dispatch(logout());
     },
