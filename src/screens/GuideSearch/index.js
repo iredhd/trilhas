@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 
+import { useSelector } from 'react-redux';
 import {
   PrivateRoute, Input, Button, LoadingWrapper, List,
 } from '../../components';
@@ -15,6 +16,7 @@ const GuideSearch = () => {
   const [page, setPage] = useState(0);
   const [isPaginating, setIsPaginating] = useState(false);
   const [totallyPaginated, setTotallyPaginated] = useState(false);
+  const actualGuidesSearched = useSelector(({ User: { guidesSearched } }) => guidesSearched);
 
   const loadGuides = useCallback(async ({ text, offset }) => {
     const guidesResult = await User.getUsers({ text, page: offset });
@@ -29,10 +31,8 @@ const GuideSearch = () => {
   });
 
   const initialLoad = useCallback(async () => {
-    // setIsLoading(true);
-    // const loadedGuides = await loadGuides();
-    // setGuides(loadedGuides);
-    // setIsLoading(false);
+    setTotallyPaginated(true);
+    setGuides(actualGuidesSearched);
   });
 
   const handlePaginate = useCallback(async () => {
@@ -100,7 +100,7 @@ const GuideSearch = () => {
             keyExtractor={({ id }) => id}
             Card={GuideCard}
             headerTitleComplement="guia(s) encontrado(s)"
-            emptyMessage={'Ooooops!\nNenhum guia foi encontrado'}
+            emptyMessage={actualGuidesSearched.length === 0 && search === '' ? 'Bem vindo!\nEncontre um guia de turismo digitando na busca acima.' : 'Ooooops!\nNenhum guia foi encontrado'}
             isRefreshing={isRefreshing}
             handleRefresh={handleRefresh}
             isPaginating={isPaginating}

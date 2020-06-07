@@ -11,8 +11,28 @@ export const registerData = (data) => async (dispatch, getState) => {
       cityName: data.cityName || user.cityName || null,
       id: data.id || user.id || null,
       profilePicture: data.profilePicture || user.profilePicture || null,
+      guidesSearched: data.guidesSearched || user.guidesSearched || [],
     },
   });
+};
+
+export const addGuideSearched = (guideSearched) => (dispatch, getState) => {
+  const { guidesSearched: actualGuidesSearch } = getState().User;
+
+  let guidesSearched = actualGuidesSearch.filter((guide) => guide.id !== guideSearched.id);
+
+  guidesSearched.push({
+    ...guideSearched,
+    searchMoment: new Date(),
+  });
+
+  guidesSearched = guidesSearched
+    .sort((a, b) => new Date(b.searchMoment) - new Date(a.searchMoment))
+    .filter((_, index) => index <= 10);
+
+  dispatch(registerData({
+    guidesSearched,
+  }));
 };
 
 export const clearData = () => ({

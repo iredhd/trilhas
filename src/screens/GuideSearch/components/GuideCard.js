@@ -2,14 +2,18 @@ import React, { useCallback } from 'react';
 import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
 
 import { Typography, CircularImage } from '../../../components';
 import { CardStyles } from '../../../styles';
+import { addGuideSearched } from '../../../store/actions/User';
 
 const GuideCard = ({ item }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const handleCardPress = useCallback(() => {
+    dispatch(addGuideSearched(item));
     navigation.navigate('Profile', {
       id: item.id,
     });
