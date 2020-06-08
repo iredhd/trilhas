@@ -9,7 +9,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 import { DefaultColors } from '../styles';
 import PopUp from './PopUp';
-import NoImage from '../../assets/icon.png';
+import NoImage from '../assets/logo.png';
 import Loading from './Loading';
 import Icon from './Icon';
 

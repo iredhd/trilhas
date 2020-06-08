@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { PrivateRoute, Typography } from '../../components';
 import { DefaultColors, CardStyles } from '../../styles';
-import homeBackground from '../../../assets/home-background.jpg';
+import homeBackground from '../../assets/home-background.jpg';
 
 const Home = () => {
   const navigation = useNavigation();

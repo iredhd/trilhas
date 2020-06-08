@@ -13,9 +13,9 @@ to: app.json
     ],
     "version": "<%= h.app.version %>",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./src/assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./src/assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },

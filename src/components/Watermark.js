@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import PropTypes from 'prop-types';
 
 import Background from './Background';
-import logo from '../../assets/icon.png';
+import logo from '../assets/logo.png';
 
 const Watermark = ({ children }) => (
   <Background>
