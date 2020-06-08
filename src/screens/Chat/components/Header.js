@@ -9,7 +9,9 @@ const Header = ({ profile }) => {
   const navigation = useNavigation();
 
   const goToProfile = useCallback(() => {
-    navigation.navigate('Profile');
+    navigation.navigate('Profile', {
+      id: profile.id,
+    });
   });
 
   return (

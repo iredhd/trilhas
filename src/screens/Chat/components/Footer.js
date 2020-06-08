@@ -1,12 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
+import PropTypes from 'prop-types';
 
 import { Button, Input, Spacer } from '../../../components';
 
-const Footer = () => {
+const Footer = ({ onSubmitMessage }) => {
   const [message, setMessage] = useState('');
 
   const handleMessageSubmit = useCallback(() => {
+    onSubmitMessage(message);
     setMessage('');
   });
 
@@ -48,5 +50,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+Footer.propTypes = {
+  onSubmitMessage: PropTypes.func.isRequired,
+};
 
 export default Footer;

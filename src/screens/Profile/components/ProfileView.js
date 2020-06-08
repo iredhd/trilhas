@@ -53,7 +53,9 @@ const ProfileView = ({ profile, toggleProfileScreen }) => {
           <View style={styles.buttonsContainer}>
             <Button
               value="ENVIAR MENSAGEM"
-              onPress={() => navigation.navigate('Chat')}
+              onPress={() => navigation.navigate('Chat', {
+                id: profile.id,
+              })}
             />
             <Spacer size={15} />
             <Button

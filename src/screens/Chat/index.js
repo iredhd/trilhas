@@ -4,69 +4,33 @@ import React, {
 import {
   StyleSheet, FlatList, KeyboardAvoidingView, Platform,
 } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 
 import { PrivateRoute, LoadingWrapper } from '../../components';
 import { Header, Footer, Message } from './components';
+import { User, Chat as ChatService } from '../../services';
+import { useChat } from '../../hooks';
 
 const Chat = () => {
+  const route = useRoute();
+  const [chatId, setChatId] = useState(null);
+  const [chat, sendMessage] = useChat(chatId);
+
   const [profile, setProfile] = useState({
     isLoading: true,
   });
-  const [chat, setChat] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const chatRef = useRef(null);
 
-  const getProfile = useCallback(() => new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        id: Math.random().toString(),
-        isGuide: true,
-        name: 'Ighor Redhd',
-        profilePicture: 'https://instagram.fssz1-1.fna.fbcdn.net/v/t51.2885-19/s150x150/82164289_3835525919805869_7911970237640081408_n.jpg?_nc_ht=instagram.fssz1-1.fna.fbcdn.net&_nc_ohc=gQP0WoRPsx8AX9JKs-F&oh=1bfd73a3604a0e5d3c4d2d18eaf1c7ba&oe=5EFBA0FB',
-        cityName: 'Santos, SP - Brazil',
-      });
-    }, 1 * 1000);
-  }));
-
-  const getMessages = useCallback(() => new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([{
-        id: Math.random().toString(),
-        ownerId: Math.random().toString(),
-        name: 'Ighor Redhd',
-        message: ' 1- Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos.',
-      }, {
-        id: Math.random().toString(),
-        ownerId: '1',
-        name: 'Ighor Redhd',
-        message: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos.',
-      }, {
-        id: Math.random().toString(),
-        ownerId: Math.random().toString(),
-        name: 'Ighor Redhd',
-        message: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos.',
-      }, {
-        id: Math.random().toString(),
-        ownerId: '1',
-        name: 'Ighor Redhd',
-        message: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos.',
-      }, {
-        id: Math.random().toString(),
-        ownerId: Math.random().toString(),
-        name: 'Ighor Redhd',
-        message: 'Lorem Ipsum é simplesmente uma simulação de texto da indústria tipográfica e de impressos, e vem sendo utilizado desde o século XVI, quando um impressor desconhecido pegou uma bandeja de tipos e os embaralhou para fazer um livro de modelos de tipos.',
-      }]);
-    }, 1 * 1000);
-  }));
-
-  const loadProfile = useCallback(async () => {
+  const loadProfile = useCallback(async (id) => {
     setProfile({
       ...profile,
       isLoading: true,
     });
 
-    const result = await getProfile();
+    const result = await User.getUser(id);
 
     setProfile({
       isLoading: false,
@@ -74,10 +38,10 @@ const Chat = () => {
     });
   });
 
-  const loadMessages = useCallback(async () => {
+  const loadMessages = useCallback(async (userToChat) => {
     setIsLoading(true);
-    const result = await getMessages();
-    setChat(result);
+    const chatID = await ChatService.getChatId(userToChat);
+    setChatId(chatID);
     setIsLoading(false);
   });
 
@@ -86,9 +50,9 @@ const Chat = () => {
   });
 
   useEffect(() => {
-    loadProfile();
-    loadMessages();
-  }, []);
+    loadProfile(route.params.id);
+    loadMessages(route.params.id);
+  }, [route.params.id]);
 
   return (
     <PrivateRoute>
@@ -107,7 +71,9 @@ const Chat = () => {
         enabled={Platform.OS === 'ios'}
         behavior="padding"
       >
-        <Footer />
+        <Footer
+          onSubmitMessage={sendMessage}
+        />
       </KeyboardAvoidingView>
     </PrivateRoute>
   );
