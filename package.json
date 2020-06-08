@@ -20,7 +20,7 @@
     "firebase:deploy:start": "firebase deploy --only functions",
     "deploy": "run-s -l deploy:*",
     "deploy:validate": "node ./scripts/deployValidation.js",
-    "deploy:validated": "run-s -l publish:*",
+    "deploy:validated": "run-s publish:*",
     "publish:prebuild": "run-s app-json-gen",
     "publish:login": "node ./scripts/expoLogin.js",
     "publish:publish": "expo publish -c",
