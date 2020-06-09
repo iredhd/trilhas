@@ -1,6 +1,8 @@
 import firebase from 'firebase';
 import 'firebase/auth';
+
 import User from './User';
+import Notification from './Notifications';
 
 class Auth {
   static async LoginWithEmailAndPassword(email, password) {
@@ -10,6 +12,10 @@ class Auth {
       const token = await firebase.auth().currentUser.getIdToken();
 
       const user = await User.getUser(AuthData.uid);
+
+      await User.addUserDevice();
+
+      Notification.setPushNotificationId(user.id);
 
       return {
         user,
@@ -24,6 +30,7 @@ class Auth {
 
   static async Logout() {
     try {
+      await User.removeUserDevice();
       await firebase.auth().signOut();
     } catch (e) {
       console.log('e -> ', e);

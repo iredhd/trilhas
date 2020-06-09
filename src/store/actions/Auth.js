@@ -50,8 +50,8 @@ export const failLogin = (message) => ({
   },
 });
 
-export const logout = () => (dispatch) => {
-  Auth.Logout();
+export const logout = () => async (dispatch) => {
+  await Auth.Logout();
 
   dispatch({
     type: ActionTypes.USER_CLEAR_DATA,

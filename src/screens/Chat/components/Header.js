@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
 
 Header.propTypes = {
   profile: PropTypes.shape({
+    id: PropTypes.string,
     name: PropTypes.string,
     cityName: PropTypes.string,
     profilePicture: PropTypes.string,

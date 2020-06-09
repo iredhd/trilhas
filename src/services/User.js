@@ -1,5 +1,9 @@
 import firebase from 'firebase';
 import axios from 'axios';
+import Constants from 'expo-constants';
+import { AsyncStorage } from 'react-native';
+
+import Device from './Device';
 
 class User {
   static async getUser(id) {
@@ -110,9 +114,76 @@ class User {
     }
   }
 
+  static async addUserDevice() {
+    const installationId = await AsyncStorage.getItem('installationId');
+    const userId = firebase.auth().currentUser.uid;
+
+    const userRef = firebase.firestore().collection('users').doc(userId);
+
+    const user = (await userRef.get()).data();
+
+    const deviceInfo = Device.getDeviceInformations();
+
+    const newDevice = {
+      brand: deviceInfo.brand,
+      name: deviceInfo.deviceName,
+      year: deviceInfo.deviceYear,
+      OS: deviceInfo.os,
+      OS_version: deviceInfo.osVersion,
+      push_token: null,
+      installation_id: installationId,
+    };
+
+    if (user.devices && user.devices.map((device) => device.installation_id).includes(installationId)) {
+      return;
+    }
+
+    userRef.set({
+      devices: [
+        ...(user.devices || []),
+        newDevice,
+      ],
+    }, { merge: true });
+  }
+
+  static async addUserNotificationToken(pushToken) {
+    const installationId = await AsyncStorage.getItem('installationId');
+    const userId = firebase.auth().currentUser.uid;
+
+    const userRef = firebase.firestore().collection('users').doc(userId);
+
+    const user = (await userRef.get()).data();
+
+    userRef.set({
+      devices: user.devices.map((device) => {
+        if (device.installation_id === installationId) {
+          return {
+            ...device,
+            push_token: pushToken,
+          };
+        }
+
+        return device;
+      }),
+    }, { merge: true });
+  }
+
+  static async removeUserDevice() {
+    const installationId = await AsyncStorage.getItem('installationId');
+    const userId = firebase.auth().currentUser.uid;
+
+    const userRef = firebase.firestore().collection('users').doc(userId);
+
+    const user = (await userRef.get()).data();
+
+    userRef.set({
+      devices: (user.devices || []).filter((device) => device.installation_id !== installationId),
+    }, { merge: true });
+  }
+
   static async upsertProfilePicture(userId, image) {
     try {
-      const { data: userData } = await axios.post('/users/profile-picture', {
+      const { data: userData } = await axios.post(`${Constants.manifest.extra.EXPO_FIREBASE_API}/users/profile-picture`, {
         image,
       });
 

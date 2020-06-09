@@ -19,3 +19,4 @@ app.json
 firebaseConfig.js
 .firebaserc
 *.log
+google-services.json

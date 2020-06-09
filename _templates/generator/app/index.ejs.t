@@ -25,6 +25,10 @@ to: app.json
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "package": "app.trailspot",
+      "googleServicesFile": "./google-services.json"
+    },
     "ios": {
       "supportsTablet": false
     },

@@ -30,6 +30,7 @@ const Footer = ({ onSubmitMessage }) => {
       </View>
       <Spacer horizontal size={5} />
       <Button
+        disabled={!message.trim()}
         value="ENVIAR"
         onPress={handleMessageSubmit}
       />

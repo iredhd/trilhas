@@ -14,7 +14,7 @@ import { useChat } from '../../hooks';
 const Chat = () => {
   const route = useRoute();
   const [chatId, setChatId] = useState(null);
-  const [chat, sendMessage] = useChat(chatId);
+  const [chat, sendMessage, isLoadingChat] = useChat(chatId);
 
   const [profile, setProfile] = useState({
     isLoading: true,
@@ -45,10 +45,6 @@ const Chat = () => {
     setIsLoading(false);
   });
 
-  const scrollToBottom = useCallback(() => {
-    chatRef.current.scrollToEnd();
-  });
-
   useEffect(() => {
     loadProfile(route.params.id);
     loadMessages(route.params.id);
@@ -56,10 +52,10 @@ const Chat = () => {
 
   return (
     <PrivateRoute>
-      <Header profile={profile} />
-      <LoadingWrapper isLoading={isLoading}>
+      <LoadingWrapper isLoading={isLoading || isLoadingChat}>
+        <Header profile={profile} />
         <FlatList
-          onLayout={scrollToBottom}
+          inverted
           ref={chatRef}
           data={chat}
           keyExtractor={({ id }) => id}

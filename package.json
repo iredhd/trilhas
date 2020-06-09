@@ -39,6 +39,7 @@
     "base-64": "^0.1.0",
     "expo": "~36.0.0",
     "expo-constants": "~8.0.0",
+    "expo-device": "~2.0.0",
     "expo-image-picker": "~8.0.1",
     "expo-permissions": "~8.0.0",
     "expo-updates": "~0.0.1-rc.0",
