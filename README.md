@@ -9,8 +9,10 @@ The entire project backend will use Google Firebase with some native services an
 ## Techs Used
 - Expo
 - React Native
+- Prop-Types
 - Redux
-- Redux Persist
+  - Redux Thunk
+  - Redux Persist
 - Firebase
   - Firebase Realtime Database
   - Firebase Firestore
