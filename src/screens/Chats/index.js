@@ -6,6 +6,7 @@ import {
 } from '../../components';
 import { ChatCard } from './components';
 import { Chat } from '../../services';
+import { Constants } from '../../utils';
 
 const Chats = () => {
   const [search, setSearch] = useState('');
@@ -14,22 +15,9 @@ const Chats = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [page, setPage] = useState(0);
   const [isPaginating, setIsPaginating] = useState(false);
+  const [totallyPaginated, setTotallyPaginated] = useState(false);
 
-  const loadChats = useCallback(() => new Promise((resolve) => {
-    setTimeout(() => {
-      const newGuides = [];
-      for (let index = 0; index < 50; index += 1) {
-        newGuides.push({
-          id: Math.random().toString(),
-          name: 'Ighor Redhd',
-          profilePicture: 'https://instagram.fssz1-1.fna.fbcdn.net/v/t51.2885-19/s150x150/82164289_3835525919805869_7911970237640081408_n.jpg?_nc_ht=instagram.fssz1-1.fna.fbcdn.net&_nc_ohc=gQP0WoRPsx8AX9JKs-F&oh=1bfd73a3604a0e5d3c4d2d18eaf1c7ba&oe=5EFBA0FB',
-          cityName: 'Santos, SP - Brazil',
-          message: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-        });
-      }
-      resolve(newGuides);
-    }, 1 * 1000);
-  }));
+  const loadChats = useCallback(({ name = '', offset = 0 } = {}) => Chat.getUserChats({ name, page: offset }));
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -40,30 +28,46 @@ const Chats = () => {
 
   const initialLoad = useCallback(async () => {
     setIsLoading(true);
-    const cs = await Chat.getUserChats();
-    console.log('cs', cs);
     const loadedChats = await loadChats();
     setChats(loadedChats);
     setIsLoading(false);
   });
 
   const handlePaginate = useCallback(async () => {
-    if (isPaginating) {
+    if (isPaginating || totallyPaginated) {
       return;
     }
 
+    const offset = page + 1;
     setIsPaginating(true);
-    setPage(page + 1);
-    const loadedChats = await loadChats();
+    setPage(offset);
+
+    const loadedChats = await loadChats({
+      name: search,
+      offset,
+    });
+
+    if (loadedChats.length < Constants.LIMIT_ITEMS_PER_PAGE) {
+      setTotallyPaginated(true);
+    }
+
     setChats([...chats, ...loadedChats]);
     setIsPaginating(false);
   });
 
   const handleSearch = useCallback(async () => {
     setIsLoading(true);
-    setPage(0);
+
+    const offset = 0;
+
+    setPage(offset);
     setIsLoading(true);
-    const loadedChats = await loadChats();
+
+    const loadedChats = await loadChats({
+      name: search,
+      offset,
+    });
+
     setChats(loadedChats);
     setIsLoading(false);
   });
@@ -78,7 +82,7 @@ const Chats = () => {
         <View style={styles.searchContainer}>
           <View style={styles.inputContainer}>
             <Input
-              placeholder="Nome ou cidade"
+              placeholder="Nome"
               value={search}
               onChangeText={setSearch}
             />

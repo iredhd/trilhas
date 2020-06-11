@@ -10,7 +10,9 @@ const ChatCard = ({ item }) => {
   const navigation = useNavigation();
 
   const handleCardPress = useCallback(() => {
-    navigation.navigate('Chat');
+    navigation.navigate('Chat', {
+      id: item.userId,
+    });
   });
 
   return (
@@ -46,9 +48,9 @@ const ChatCard = ({ item }) => {
           </Typography>
         </View>
         <View style={styles.badgeContainer}>
-          <Badge
-            value={7}
-          />
+          {/* <Badge
+            value={0}
+          /> */}
         </View>
       </TouchableOpacity>
     </View>

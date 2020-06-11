@@ -70,7 +70,10 @@ class Chat {
 
         return ({
           id: chat.id,
-          user,
+          user: {
+            id: userRef.id,
+            ...user,
+          },
           last_message_moment: new Date(chat.last_message_moment),
         });
       }));
@@ -140,6 +143,7 @@ class Chat {
   static mapChatData(chat) {
     return ({
       id: chat.id,
+      userId: chat.user.id,
       name: chat.user.name,
       profilePicture: chat.user.profile_picture,
       cityName: chat.user.city_name,

@@ -54,10 +54,9 @@ const Menu = () => {
   }, {
     name: 'Chats',
     label: 'Conversas',
-    badge: 5,
+    badge: null,
     disabled: false,
-    disabledFunc: () => {
-    },
+    disabledFunc: ({ actualRoute }) => actualRoute.state.routeNames[actualRoute.state.index] === 'Chats',
     action: () => {
       navigation.navigate('Chats');
     },
@@ -103,7 +102,7 @@ const Menu = () => {
                 body: 'A nova versão já foi baixada, pressione "OK" para recarregar a aplicação.',
                 options: [{
                   label: 'OK',
-                  onPress: Updates.reloadAsync,
+                  onPress: () => Updates.reloadAsync(),
                 }],
               });
             },
