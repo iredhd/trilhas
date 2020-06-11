@@ -5,6 +5,7 @@ import {
   PrivateRoute, Input, Button, LoadingWrapper, List,
 } from '../../components';
 import { ChatCard } from './components';
+import { Chat } from '../../services';
 
 const Chats = () => {
   const [search, setSearch] = useState('');
@@ -39,6 +40,8 @@ const Chats = () => {
 
   const initialLoad = useCallback(async () => {
     setIsLoading(true);
+    const cs = await Chat.getUserChats();
+    console.log('cs', cs);
     const loadedChats = await loadChats();
     setChats(loadedChats);
     setIsLoading(false);
