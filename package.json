@@ -4,6 +4,7 @@
   "description": "Trailspot",
   "scripts": {
     "start": "run-s start:prebuild:* start:*",
+    "start:prebuild:env-generate": "run-s env-gen",
     "start:prebuild:app-generate": "run-s app-json-gen",
     "start:prebuild:firebase-generate": "run-s firebase-functions-json-gen",
     "start:serve": "expo start -c",
@@ -17,7 +18,7 @@
     "firebase:serve:pre-serve": "run-s firebase-functions-json-gen",
     "firebase:serve:start": "firebase emulators:start --only functions",
     "firebase:deploy": "run-s firebase:deploy:*",
-    "firebase:deploy:pre-deploy": "run-s firebase-functions-json-gen",
+    "firebase:deploy:pre-deploy": "run-s env-gen firebase-functions-json-gen",
     "firebase:deploy:start": "firebase deploy --only functions",
     "deploy": "run-s -l deploy:*",
     "deploy:validate": "node ./scripts/deployValidation.js",
@@ -27,7 +28,8 @@
     "publish:publish": "expo publish -c",
     "publish:logout": "expo logout",
     "app-json-gen": "HYGEN_OVERWRITE=1 hygen generator app",
-    "firebase-functions-json-gen": "HYGEN_OVERWRITE=1 hygen generator firebase"
+    "firebase-functions-json-gen": "HYGEN_OVERWRITE=1 hygen generator firebase",
+    "env-gen": "node ./scripts/envGenerator.js"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
@@ -41,6 +43,7 @@
     "expo": "~36.0.0",
     "expo-constants": "~8.0.0",
     "expo-device": "~2.0.0",
+    "expo-facebook": "^8.1.0",
     "expo-image-picker": "~8.0.1",
     "expo-permissions": "~8.0.0",
     "expo-updates": "~0.0.1-rc.0",

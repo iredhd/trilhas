@@ -20,3 +20,5 @@ firebaseConfig.js
 .firebaserc
 *.log
 google-services.json
+.env.prd
+.env.dev
