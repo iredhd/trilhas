@@ -3,6 +3,17 @@
     <br>
     Trailspot
 </h1>
+<p align="center">
+  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/iredhd/trailspot.svg">
+
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/iredhd/trailspot.svg">
+
+  <a href="https://github.com/iredhd/trailspot/issues">
+    <img alt="Repository issues" src="https://img.shields.io/github/issues/iredhd/trailspot.svg">
+  </a>
+  
+  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/iredhd/trailspot">
+</p>
 
 The content of this repository is an open-source mobile application for the tourism and entertainment sector.
 
