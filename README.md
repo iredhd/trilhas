@@ -1,4 +1,8 @@
-# Trailspot
+<h1 align="center">
+    <img alt="Trailspot" src="https://res.cloudinary.com/iredhd/image/upload/v1592958094/trailspot/PNG-file-1_ccp7n3.png" />
+    <br>
+    Trailspot
+</h1>
 
 The content of this repository is an open-source mobile application for the tourism and entertainment sector.
 
