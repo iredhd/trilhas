@@ -12,7 +12,7 @@
     <img alt="Repository issues" src="https://img.shields.io/github/issues/iredhd/trailspot.svg">
   </a>
   
-  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/iredhd/trailspot">
+  <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/iredhd/trailspot.svg">
 </p>
 
 The content of this repository is an open-source mobile application for the tourism and entertainment sector.
