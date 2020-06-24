@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img alt="Trailspot" src="https://res.cloudinary.com/iredhd/image/upload/v1592958094/trailspot/PNG-file-1_ccp7n3.png" />
+    <img alt="Trailspot" src="https://res.cloudinary.com/iredhd/image/upload/c_scale,w_256/v1592958094/trailspot/PNG-file-1_ccp7n3.png" />
     <br>
     Trailspot
 </h1>
