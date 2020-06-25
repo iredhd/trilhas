@@ -1,20 +1,50 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Constants from 'expo-constants';
 import PropTypes from 'prop-types';
 
+import { useField } from '@unform/core';
 import { DefaultColors } from '../styles';
 
 const AutoCompleteInput = ({
-  placeholder, onPress, value,
+  placeholder, onPress, value, name,
 }) => {
+  const inputRef = useRef(null);
+
   const handlePress = useCallback(({ description: cityName, id }) => {
     onPress({ cityName, id });
   });
 
+  const {
+    fieldName, registerField, error, clearError,
+  } = useField(name);
+
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: inputRef.current,
+      path: 'value',
+      clearValue(ref) {
+        ref.value = '';
+        ref.clear();
+      },
+      setValue(ref, newValue) {
+        inputRef.current.value = newValue;
+      },
+      getValue(ref) {
+        return ref.value;
+      },
+    });
+  }, [fieldName, registerField]);
+
+  const handleFocus = useCallback(() => {
+    clearError();
+  });
+
   return (
     <GooglePlacesAutocomplete
+      ref={inputRef}
       placeholder={placeholder}
       keyboardShouldPersistTaps="handled"
       filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']}
@@ -24,8 +54,18 @@ const AutoCompleteInput = ({
       disableScroll
       suppressDefaultStyles
       onPress={handlePress}
+      textInputProps={{
+        onFocus: handleFocus,
+        placeholderTextColor: `rgb(${DefaultColors.secondary})`,
+        keyboardAppearance: 'dark',
+      }}
       styles={{
-        textInputContainer: styles.textInputContainer,
+        textInputContainer: [
+          styles.textInputContainer,
+          error && {
+            borderColor: `rgb(${DefaultColors.danger})`,
+          },
+        ],
         textInput: styles.textInput,
         row: styles.row,
         listView: styles.listView,
@@ -46,8 +86,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderTopColor: `rgb(${DefaultColors.secondary})`,
-    borderBottomColor: `rgb(${DefaultColors.secondary})`,
+    borderColor: `rgb(${DefaultColors.secondary})`,
     height: 40,
     justifyContent: 'center',
     backgroundColor: `rgb(${DefaultColors.tertiary})`,
@@ -86,6 +125,7 @@ AutoCompleteInput.propTypes = {
   placeholder: PropTypes.string,
   value: PropTypes.string,
   onPress: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 export default AutoCompleteInput;

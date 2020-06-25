@@ -13,7 +13,7 @@ const Drawer = createDrawerNavigator();
 
 const Auth = () => (
   <Stack.Navigator
-    initialRouteName="Loading"
+    initialRouteName="Login"
     headerMode="none"
     gestureEnabled={false}
   >

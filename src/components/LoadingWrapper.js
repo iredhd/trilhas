@@ -5,18 +5,19 @@ import PropTypes from 'prop-types';
 import Loading from './Loading';
 
 const LoadingWrapper = ({ isLoading, children }) => (
-  <View style={styles.container}>
+  <>
     {isLoading ? (
       <View style={styles.loadingContainer}>
         <Loading />
       </View>
     ) : children }
-  </View>
+  </>
 );
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: '100%',
   },
   loadingContainer: {
     flex: 1,

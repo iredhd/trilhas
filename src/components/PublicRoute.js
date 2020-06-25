@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Watermark from './Watermark';
+import Background from './Background';
 
 const PublicRoute = ({ children }) => (
-  <Watermark>
+  <Background>
     {children}
-  </Watermark>
+  </Background>
 );
 
 PublicRoute.propTypes = {

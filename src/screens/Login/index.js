@@ -1,31 +1,74 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-
+import React, {
+  useCallback, useState, useEffect,
+} from 'react';
 import {
-  PublicRoute, Input, Button, LoadingWrapper, PopUp,
+  View, StyleSheet, Image, Animated, Dimensions,
+} from 'react-native';
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import i18n from 'i18n-js';
+
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
+import {
+  PublicRoute, Button, LoadingWrapper, PopUp, Spacer,
 } from '../../components';
-import { DefaultColors } from '../../styles';
-import { loginWithEmailAndPassword } from '../../store/actions/Auth';
+import { LoginForm, RegisterForm } from './components';
+import logo from '../../assets/logo.png';
 
 const Login = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
+
   const isLoading = useSelector((state) => state.Auth.isLoading);
   const error = useSelector((state) => state.Auth.errorMessage);
   const loggedIn = useSelector((state) => state.Auth.loggedIn);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [popUp, setPopUp] = useState({
     isVisible: false,
     body: '',
   });
 
-  const handleLogin = useCallback(async () => {
-    dispatch(loginWithEmailAndPassword(email, password));
-  }, [email, password]);
+  const [registerButtonOffsetScale] = useState(new Animated.Value(0));
+  const [animatedPanelRotation] = useState(new Animated.Value(0));
+  const [panelVisible, setPanelVisible] = useState('login');
+
+  animatedPanelRotation.addListener(({ value }) => {
+    if (value >= 90) {
+      setPanelVisible('register');
+    } else {
+      setPanelVisible('login');
+    }
+  });
+
+  const animatedLoginRotation = animatedPanelRotation.interpolate({
+    inputRange: [0, 180],
+    outputRange: ['0deg', '180deg'],
+  });
+
+  const animatedRegisterRotation = animatedPanelRotation.interpolate({
+    inputRange: [0, 180],
+    outputRange: ['180deg', '360deg'],
+  });
+
+  const springAnimation = useCallback((animatedValue, toValue) => Animated.spring(animatedValue, {
+    toValue,
+    speed: 2,
+    bounciness: 14,
+    useNativeDriver: true,
+  }));
+
+  const toggleFlip = useCallback(() => {
+    let toValue = 0;
+
+    if (panelVisible === 'login') {
+      toValue = 180;
+    }
+
+    Animated.spring(animatedPanelRotation, {
+      toValue,
+      friction: 8,
+      tension: 10,
+    }).start();
+  });
 
   useEffect(() => {
     if (error) {
@@ -42,86 +85,127 @@ const Login = () => {
     }
   }, [loggedIn]);
 
-  useEffect(() => () => setPopUp({
-    isVisible: false,
-    body: '',
-  }), []);
+  useEffect(() => {
+    Animated.parallel([
+      springAnimation(registerButtonOffsetScale, 1),
+    ]).start();
+
+    return () => setPopUp({
+      isVisible: false,
+      body: '',
+    });
+  }, []);
 
   return (
     <PublicRoute>
-      <View style={styles.container}>
-        <LoadingWrapper
-          isLoading={isLoading}
-        >
-          <View
-            style={styles.centralContainer}
-          >
-            <View style={styles.loginPanel}>
-              <Input
-                placeholder="E-mail"
-                containerStyle={{ marginBottom: 15, marginTop: 15 }}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-              <Input
-                placeholder="Senha"
-                secureTextEntry
-                containerStyle={{ marginBottom: 20 }}
-                value={password}
-                onChangeText={setPassword}
-              />
-              <View style={styles.buttonContainer}>
+      <KeyboardAwareScrollView
+        bounces={false}
+        keyboardShouldPersistTaps="handled"
+        enableOnAndroid
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.container}
+      >
+        <View style={styles.imageContainer}>
+          <Image
+            source={logo}
+            style={styles.image}
+          />
+        </View>
+        <View style={styles.formsContainer}>
+          <LoadingWrapper isLoading={isLoading}>
+            <Animated.View
+              style={[
+                styles.loginContainer,
+                {
+                  transform: [{
+                    rotateX: animatedLoginRotation,
+                  }],
+                },
+                panelVisible === 'login' ? { zIndex: 1 } : { zIndex: 0 },
+              ]}
+            >
+              <LoginForm />
+              <Spacer size={30} />
+              <Animated.View
+                style={[
+                  {
+                    transform: [{
+                      scale: registerButtonOffsetScale,
+                    }],
+                  }]}
+              >
                 <Button
-                  disabled={email.trim() === '' || password.trim() === ''}
-                  onPress={handleLogin}
-                  value="ENTRAR"
+                  value={i18n.t('goToSignIn')}
+                  onPress={toggleFlip}
                 />
-              </View>
-            </View>
-          </View>
-        </LoadingWrapper>
-        <PopUp
-          title="Ooops!"
-          body={popUp.body}
-          isVisible={popUp.isVisible}
-          onBackdropPress={() => setPopUp({ ...popUp, isVisible: false })}
-          options={[{
-            label: 'OK',
-            onPress: () => setPopUp({ ...popUp, isVisible: false }),
-          }]}
-        />
-      </View>
+              </Animated.View>
+            </Animated.View>
+            <Animated.View
+              style={[
+                styles.registerContainer,
+                {
+                  transform: [{
+                    rotateX: animatedRegisterRotation,
+                  }],
+                },
+                panelVisible === 'register' ? { zIndex: 1 } : { zIndex: 0 },
+              ]}
+            >
+              <RegisterForm />
+              <Spacer size={30} />
+              <Button
+                value={i18n.t('goToLogIn')}
+                onPress={toggleFlip}
+              />
+            </Animated.View>
+          </LoadingWrapper>
+        </View>
+      </KeyboardAwareScrollView>
+      <PopUp
+        title="Ooops!"
+        body={popUp.body}
+        isVisible={popUp.isVisible}
+        onBackdropPress={() => setPopUp({ ...popUp, isVisible: false })}
+        options={[{
+          label: 'OK',
+          onPress: () => setPopUp({ ...popUp, isVisible: false }),
+        }]}
+      />
     </PublicRoute>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    paddingBottom: 100,
+    minHeight: Dimensions.get('screen').height,
+  },
+  imageContainer: {
     flex: 1,
+    alignItems: 'center',
     justifyContent: 'center',
   },
-  centralContainer: {
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    height: '80%',
+  image: {
+    width: 300,
+    height: 300,
   },
-  loginPanel: {
-    backgroundColor: `rgb(${DefaultColors.primary})`,
-    borderRadius: 15,
+  formsContainer: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loginContainer: {
+    flex: 1,
     width: '80%',
-    padding: 15,
-    borderWidth: 1,
-    borderColor: `rgb(${DefaultColors.secondary})`,
-    shadowColor: `rgb(${DefaultColors.secondary})`,
-    shadowOffset: { height: 10 },
-    shadowOpacity: 0.5,
-    elevation: 10,
+    backfaceVisibility: 'hidden',
   },
-  buttonContainer: {
-    alignItems: 'center',
-    marginBottom: 10,
+  registerContainer: {
+    flex: 1,
+    width: '80%',
+    backfaceVisibility: 'hidden',
+    position: 'absolute',
+    top: 0,
   },
 });
 

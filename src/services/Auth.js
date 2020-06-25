@@ -1,5 +1,8 @@
 import firebase from 'firebase';
 import 'firebase/auth';
+import Constants from 'expo-constants';
+import * as Facebook from 'expo-facebook';
+import i18n from 'i18n-js';
 
 import User from './User';
 import Notification from './Notifications';
@@ -28,12 +31,89 @@ class Auth {
     }
   }
 
+  static async LoginWithFacebook() {
+    try {
+      await Facebook.initializeAsync(Constants.manifest.extra.EXPO_FACEBOOK_APP_ID);
+      const {
+        type,
+        token,
+      } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ['public_profile', 'email'],
+      });
+
+      if (type === 'success') {
+        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+
+        const userRef = await firebase.auth().signInWithCredential(credential);
+
+        await User.upsertUser({
+          id: userRef.user.uid,
+          name: userRef.user.displayName,
+          email: userRef.user.email,
+        });
+
+        const user = await User.getUser(userRef.user.uid);
+
+        await User.addUserDevice();
+
+        await Notification.setPushNotificationId(user.id);
+
+        const firebaseToken = await firebase.auth().currentUser.getIdToken();
+
+        return {
+          token: firebaseToken,
+          user,
+        };
+      }
+      return {
+        error: this.handleErrors(null),
+      };
+    } catch ({ code }) {
+      return {
+        error: this.handleErrors(code),
+      };
+    }
+  }
+
+  static async Register(userToRegister) {
+    try {
+      const userRef = await firebase.auth().createUserWithEmailAndPassword(userToRegister.email, userToRegister.password);
+
+      await User.upsertUser({
+        id: userRef.user.uid,
+        name: userToRegister.name,
+        email: userToRegister.email,
+        cityName: userToRegister.city.cityName,
+        cityId: userToRegister.city.id,
+      });
+
+      const user = await User.getUser(userRef.user.uid);
+
+      await User.addUserDevice();
+
+      await Notification.setPushNotificationId(user.id);
+
+      const firebaseToken = await firebase.auth().currentUser.getIdToken();
+
+      return {
+        token: firebaseToken,
+        user,
+      };
+    } catch ({ code }) {
+      return {
+        error: this.handleErrors(code),
+      };
+    }
+  }
+
   static async Logout() {
     try {
       await User.removeUserDevice();
-      await firebase.auth().signOut();
-    } catch (e) {
-      console.log('e -> ', e);
+      return await firebase.auth().signOut();
+    } catch ({ code }) {
+      return {
+        error: this.handleErrors(code),
+      };
     }
   }
 
@@ -51,15 +131,17 @@ class Auth {
   static handleErrors(error) {
     switch (error) {
       case 'auth/invalid-email':
-        return 'E-mail inválido.';
+        return i18n.t('invalidEmail');
       case 'auth/wrong-password':
-        return 'Senha incorreta.';
+        return i18n.t('wrongPassword');
       case 'auth/user-not-found':
-        return 'Usuário inexistente.';
+        return i18n.t('userNotFound');
       case 'auth/user-disabled':
-        return 'Usuário bloqueado.\nEntre em contato com suporte.';
+        return i18n.t('disabledUser');
+      case 'auth/email-already-in-use':
+        return i18n.t('emailAlreadyInUse');
       default:
-        return 'Erro de autenticação. Tente novamente mais tarde.';
+        return i18n.t('authError');
     }
   }
 }

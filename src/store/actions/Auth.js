@@ -14,6 +14,30 @@ export const loginWithEmailAndPassword = (email, password) => async (dispatch) =
   return dispatch(storeData(AuthData));
 };
 
+export const loginWithFacebook = () => async (dispatch) => {
+  dispatch(requestLogin());
+
+  const AuthData = await Auth.LoginWithFacebook();
+
+  if (AuthData.error) {
+    return dispatch(failLogin(AuthData.error));
+  }
+
+  return dispatch(storeData(AuthData));
+};
+
+export const registerUser = (user) => async (dispatch) => {
+  dispatch(requestLogin());
+
+  const AuthData = await Auth.Register(user);
+
+  if (AuthData.error) {
+    return dispatch(failLogin(AuthData.error));
+  }
+
+  return dispatch(storeData(AuthData));
+};
+
 export const storeData = ({ user, token }) => async (dispatch, getState) => {
   const actualToken = getState().Auth.token;
 

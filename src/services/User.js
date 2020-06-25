@@ -88,6 +88,10 @@ class User {
         payload.city_id = user.cityId;
       }
 
+      if (user.email) {
+        payload.email = user.email;
+      }
+
       if (typeof user.isGuide === 'boolean') {
         payload.is_guide = user.isGuide;
       }

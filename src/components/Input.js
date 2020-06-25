@@ -1,54 +1,62 @@
-import React, { useState, useCallback } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
+import { useField } from '@unform/core';
 
 import { DefaultColors } from '../styles';
 
-const Input = ({
-  placeholder, onChangeText, secureTextEntry, containerStyle, value,
-  multiline, numberOfLines, keyboardType, autoCapitalize,
-  onFocus, required,
-}) => {
-  const [showRequiredBorder, setShowRequiredBorder] = useState(false);
+const Input = ({ name, ...rest }) => {
+  const inputRef = useRef(null);
+  const {
+    fieldName, registerField, defaultValue, error, clearError,
+  } = useField(name);
 
-  const handleChangeText = useCallback((text) => {
-    onChangeText(text);
-  });
+  useEffect(() => {
+    inputRef.current.value = defaultValue;
+  }, [defaultValue]);
 
-  const handleBlur = useCallback(() => {
-    if (required && !value.trim()) {
-      setShowRequiredBorder(true);
-    } else {
-      setShowRequiredBorder(false);
-    }
-  });
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: inputRef.current,
+      path: 'value',
+      clearValue(ref) {
+        ref.value = '';
+        ref.clear();
+      },
+      setValue(ref, value) {
+        ref.setNativeProps({ text: value });
+        inputRef.current.value = value;
+      },
+      getValue(ref) {
+        return ref.value;
+      },
+    });
+  }, [fieldName, registerField]);
 
   return (
     <View style={[
       styles.container,
-      multiline && {
-        height: 40 * numberOfLines,
+      rest?.multiline && {
+        height: 40 * (rest?.numberOfLines || 1),
         justifyContent: 'flex-start',
         paddingVertical: 5,
       },
-      showRequiredBorder && !value.trim() && {
-        borderColor: `rgb(${DefaultColors.danger})`,
-      },
-      containerStyle,
+      error && { borderColor: `rgb(${DefaultColors.danger})` },
     ]}
     >
       <TextInput
-        onBlur={handleBlur}
-        onSubmitEditing={handleBlur}
-        onFocus={onFocus}
-        multiline={multiline}
-        placeholder={placeholder}
+        ref={inputRef}
+        keyboardAppearance="dark"
+        defaultValue={defaultValue}
         placeholderTextColor={`rgb(${DefaultColors.secondary})`}
-        secureTextEntry={secureTextEntry}
-        onChangeText={handleChangeText}
-        value={value}
-        keyboardType={keyboardType}
-        autoCapitalize={autoCapitalize}
+        onChangeText={(value) => {
+          if (inputRef.current) {
+            inputRef.current.value = value;
+          }
+        }}
+        onFocus={clearError}
+        {...rest}
       />
     </View>
   );
@@ -71,32 +79,8 @@ const styles = StyleSheet.create({
   },
 });
 
-Input.defaultProps = {
-  placeholder: '',
-  onChangeText: () => {},
-  secureTextEntry: false,
-  containerStyle: {},
-  value: '',
-  multiline: false,
-  numberOfLines: 1,
-  keyboardType: 'default',
-  autoCapitalize: 'sentences',
-  onFocus: () => {},
-  required: false,
-};
-
 Input.propTypes = {
-  value: PropTypes.string,
-  placeholder: PropTypes.string,
-  onChangeText: PropTypes.func,
-  secureTextEntry: PropTypes.bool,
-  containerStyle: PropTypes.instanceOf(Object),
-  multiline: PropTypes.bool,
-  numberOfLines: PropTypes.number,
-  keyboardType: PropTypes.string,
-  autoCapitalize: PropTypes.string,
-  onFocus: PropTypes.func,
-  required: PropTypes.bool,
+  name: PropTypes.string.isRequired,
 };
 
 export default Input;

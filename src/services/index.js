@@ -3,6 +3,7 @@ import User from './User';
 import Chat from './Chat';
 import Notifications from './Notifications';
 import Device from './Device';
+import Validation from './Validation';
 
 export {
   Auth,
@@ -10,4 +11,5 @@ export {
   Chat,
   Notifications,
   Device,
+  Validation,
 };

@@ -29,7 +29,9 @@ module.exports = {
     "eslint-disable react/default-props-match-prop-types": "off",
     "import/prefer-default-export": "off",
     "max-len": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "react/jsx-props-no-spreading": "off",
+    "no-param-reassign": "off"
   },
   globals: {
     '__DEV__': true

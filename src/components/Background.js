@@ -13,7 +13,7 @@ const Background = ({ children }) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: `rgba(${DefaultColors.primary}, .5)`,
+    backgroundColor: `rgb(${DefaultColors.primary})`,
   },
 });
 
