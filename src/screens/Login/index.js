@@ -2,7 +2,8 @@ import React, {
   useCallback, useState, useEffect,
 } from 'react';
 import {
-  View, StyleSheet, Image, Animated, Dimensions,
+  View, StyleSheet, Image, Animated,
+  // Dimensions,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -12,7 +13,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import {
   PublicRoute, Button, LoadingWrapper, PopUp, Spacer,
 } from '../../components';
-import { LoginForm, RegisterForm } from './components';
+import { LoginForm, RegisterForm, ForgotPassword } from './components';
 import logo from '../../assets/logo.png';
 
 const Login = () => {
@@ -24,12 +25,13 @@ const Login = () => {
 
   const [popUp, setPopUp] = useState({
     isVisible: false,
-    body: '',
+    message: '',
   });
 
   const [registerButtonOffsetScale] = useState(new Animated.Value(0));
   const [animatedPanelRotation] = useState(new Animated.Value(0));
   const [panelVisible, setPanelVisible] = useState('login');
+  const [isVisibleForgotPasswordPop, setIsVisibleForgotPasswordPop] = useState(false);
 
   animatedPanelRotation.addListener(({ value }) => {
     if (value >= 90) {
@@ -56,6 +58,10 @@ const Login = () => {
     useNativeDriver: true,
   }));
 
+  const togglePopVisibility = useCallback(() => {
+    setIsVisibleForgotPasswordPop(!isVisibleForgotPasswordPop);
+  });
+
   const toggleFlip = useCallback(() => {
     let toValue = 0;
 
@@ -70,11 +76,18 @@ const Login = () => {
     }).start();
   });
 
+  const handlePopDismiss = useCallback(() => {
+    setPopUp({
+      isVisible: false,
+      message: null,
+    });
+  });
+
   useEffect(() => {
     if (error) {
       setPopUp({
         isVisible: true,
-        body: error,
+        message: error,
       });
     }
   }, [error]);
@@ -86,13 +99,17 @@ const Login = () => {
   }, [loggedIn]);
 
   useEffect(() => {
-    Animated.parallel([
-      springAnimation(registerButtonOffsetScale, 1),
-    ]).start();
+    if (isLoading) {
+      springAnimation(registerButtonOffsetScale, 1).start();
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    springAnimation(registerButtonOffsetScale, 1).start();
 
     return () => setPopUp({
       isVisible: false,
-      body: '',
+      message: '',
     });
   }, []);
 
@@ -112,7 +129,9 @@ const Login = () => {
           />
         </View>
         <View style={styles.formsContainer}>
-          <LoadingWrapper isLoading={isLoading}>
+          <LoadingWrapper
+            isLoading={isLoading}
+          >
             <Animated.View
               style={[
                 styles.loginContainer,
@@ -132,8 +151,14 @@ const Login = () => {
                     transform: [{
                       scale: registerButtonOffsetScale,
                     }],
-                  }]}
+                  },
+                ]}
               >
+                <Button
+                  value={i18n.t('forgotPassword')}
+                  onPress={togglePopVisibility}
+                />
+                <Spacer size={7.5} />
                 <Button
                   value={i18n.t('goToSignIn')}
                   onPress={toggleFlip}
@@ -162,14 +187,15 @@ const Login = () => {
         </View>
       </KeyboardAwareScrollView>
       <PopUp
-        title="Ooops!"
-        body={popUp.body}
+        closeOnTouchOutside
+        onDismiss={handlePopDismiss}
+        title={i18n.t('ops')}
+        message={popUp.message}
         isVisible={popUp.isVisible}
-        onBackdropPress={() => setPopUp({ ...popUp, isVisible: false })}
-        options={[{
-          label: 'OK',
-          onPress: () => setPopUp({ ...popUp, isVisible: false }),
-        }]}
+      />
+      <ForgotPassword
+        isVisible={isVisibleForgotPasswordPop}
+        onClose={togglePopVisibility}
       />
     </PublicRoute>
   );
@@ -178,7 +204,7 @@ const Login = () => {
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 100,
-    minHeight: Dimensions.get('screen').height,
+    // minHeight: Dimensions.get('screen').height,
   },
   imageContainer: {
     flex: 1,

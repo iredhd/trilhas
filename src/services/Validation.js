@@ -55,6 +55,31 @@ class Validation {
       return validationErrors;
     }
   }
+
+  static forgotPassword(data) {
+    const schema = Yup.object().shape({
+      email: this.email.required(),
+    });
+
+    return this.validate(schema, data);
+  }
+
+  static async validate(schema, data) {
+    try {
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      return null;
+    } catch (err) {
+      const validationErrors = {};
+      err.inner.forEach((validationError) => {
+        validationErrors[validationError.path] = validationError.message;
+      });
+
+      return validationErrors;
+    }
+  }
 }
 
 export default Validation;

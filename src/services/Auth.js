@@ -7,8 +7,8 @@ import i18n from 'i18n-js';
 import User from './User';
 import Notification from './Notifications';
 
-class Auth {
-  static async LoginWithEmailAndPassword(email, password) {
+const Auth = {
+  LoginWithEmailAndPassword: async (email, password) => {
     try {
       const { user: AuthData } = await firebase.auth().signInWithEmailAndPassword(email, password);
 
@@ -26,12 +26,11 @@ class Auth {
       };
     } catch ({ code }) {
       return {
-        error: this.handleErrors(code),
+        error: Auth.handleErrors(code),
       };
     }
-  }
-
-  static async LoginWithFacebook() {
+  },
+  LoginWithFacebook: async () => {
     try {
       await Facebook.initializeAsync(Constants.manifest.extra.EXPO_FACEBOOK_APP_ID);
       const {
@@ -66,16 +65,15 @@ class Auth {
         };
       }
       return {
-        error: this.handleErrors(null),
+        error: Auth.handleErrors(null),
       };
     } catch ({ code }) {
       return {
-        error: this.handleErrors(code),
+        error: Auth.handleErrors(code),
       };
     }
-  }
-
-  static async Register(userToRegister) {
+  },
+  Register: async (userToRegister) => {
     try {
       const userRef = await firebase.auth().createUserWithEmailAndPassword(userToRegister.email, userToRegister.password);
 
@@ -101,23 +99,32 @@ class Auth {
       };
     } catch ({ code }) {
       return {
-        error: this.handleErrors(code),
+        error: Auth.handleErrors(code),
       };
     }
-  }
-
-  static async Logout() {
+  },
+  sendRecoveryPasswordEmail: async (email) => {
+    try {
+      await firebase.auth().sendPasswordResetEmail(email);
+      return { };
+    } catch ({ code }) {
+      return {
+        code,
+        error: Auth.handleErrors(code),
+      };
+    }
+  },
+  Logout: async () => {
     try {
       await User.removeUserDevice();
       return await firebase.auth().signOut();
     } catch ({ code }) {
       return {
-        error: this.handleErrors(code),
+        error: Auth.handleErrors(code),
       };
     }
-  }
-
-  static async refreshAuthData() {
+  },
+  refreshAuthData: async () => {
     const token = await firebase.auth().currentUser.getIdToken();
 
     const user = await User.getUser(firebase.auth().currentUser.uid);
@@ -126,9 +133,8 @@ class Auth {
       user,
       token,
     };
-  }
-
-  static handleErrors(error) {
+  },
+  handleErrors: (error) => {
     switch (error) {
       case 'auth/invalid-email':
         return i18n.t('invalidEmail');
@@ -140,10 +146,12 @@ class Auth {
         return i18n.t('disabledUser');
       case 'auth/email-already-in-use':
         return i18n.t('emailAlreadyInUse');
+      case 'auth/account-exists-with-different-credential':
+        return i18n.t('wrongAuthMethod');
       default:
         return i18n.t('authError');
     }
-  }
-}
+  },
+};
 
 export default Auth;

@@ -1,15 +1,20 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { useField } from '@unform/core';
 
 import { DefaultColors } from '../styles';
 
-const Input = ({ name, ...rest }) => {
+const Input = ({ name, onFocus, ...rest }) => {
   const inputRef = useRef(null);
   const {
     fieldName, registerField, defaultValue, error, clearError,
   } = useField(name);
+
+  const handleFocus = useCallback(() => {
+    onFocus();
+    clearError();
+  });
 
   useEffect(() => {
     inputRef.current.value = defaultValue;
@@ -55,7 +60,7 @@ const Input = ({ name, ...rest }) => {
             inputRef.current.value = value;
           }
         }}
-        onFocus={clearError}
+        onFocus={handleFocus}
         {...rest}
       />
     </View>
@@ -79,8 +84,13 @@ const styles = StyleSheet.create({
   },
 });
 
+Input.defaultProps = {
+  onFocus: () => {},
+};
+
 Input.propTypes = {
   name: PropTypes.string.isRequired,
+  onFocus: PropTypes.func,
 };
 
 export default Input;
